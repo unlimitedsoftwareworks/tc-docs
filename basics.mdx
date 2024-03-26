@@ -39,8 +39,11 @@ let my-var = 10 // Contains a special character
 let for = "loop" // Reserved keyword
 ```
 
-Note that Type-C is case-sensitive, which means `myVar` and `myvar`
-would be considered different identifiers.
+
+<div role="alert" className="alert striped1">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <span>Note that Type-C is case-sensitive, which means `myVar` and `myvar` would be considered different identifiers.</span>
+</div>
 
 ### Naming Conventions
 
@@ -70,9 +73,9 @@ as identifiers: `as`, `as?`, `as!`, `await`, `break`, `extern`, `this`,
 `class`, `continue`, `const`, `variant`, `do`, `else`, `extern`, `mut`,
 `enum`, `false`, `from`, `for`, `foreach`, `fn`, `if`, `import`, `in`,
 `is`, `interface`, `i8`, `i16`, `i32`, `i64`, `u8`, `u16`, `u32`, `u64`,
-`f32`, `f64`, `bool`, `void`, `string`, `char`, `process`, `spawn`,
+`f32`, `f64`, `bool`, `void`, `char`, `thread`, `spawn`,
 `let`, `new`, `null`, `return`, `this`, `static`, `strict`, `struct`,
-`match`, `true`, `type`, `while`.
+`match`, `true`, `type`, `while`, `promise`.
 
 ## Punctuation
 
@@ -221,6 +224,9 @@ within the text. The available escape characters are:
 digit
 - `b"value"` - Byte string literal, array of `u8`
 
+Regular string literals are upcasted to standard String class, which supports utf8 encoding, 
+some times you need a C style string, meaning as a bytearray, hence you can use byte string literals `b"im just a u8[]"`.
+
 Numbers are divided into three categories: single-precision
 floating-point numbers, double-precision floating-point numbers, and
 decimals. A single-precision float is a number that may or may not
@@ -281,8 +287,8 @@ dissected and discussed in the following sections.
 ## Importing Modules
 
 The first logical step in most programs is to import modules. Type-C
-treats folders and files as modules, emphasizing the need for coherent
-naming and structuring of your files. Unlike some other languages,
+does not provide support for folders as packages, meaning, you must always 
+import from within a Type-C file. Unlike some other languages,
 you're only allowed to import modules at the beginning of your file;
 once you declare a variable, function, or type, you can no longer
 perform imports. For instance, from our hello world example, the default
@@ -297,7 +303,7 @@ import someX from xfile
 
 let x = someX()
 // This will compile as the compiler knows the type X
-print;n(x.value)
+println(x.value)
 // The following line won't compile as the type X isn't imported
 let y: X = someX()
 ```
@@ -361,7 +367,10 @@ Once declared as immutable, the variable can't be reassigned:
 z = 2 // Compile-time error
 ```
 
-Note that if you're declaring multiple variables as immutable in a single statement, each variable must be explicitly marked with `const`.
+<div role="alert" className="alert striped1">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>If you're declaring multiple variables as immutable in a single statement, each variable must be explicitly marked with `const`.</span>
+</div>
 
 ### Nested Declarations
 

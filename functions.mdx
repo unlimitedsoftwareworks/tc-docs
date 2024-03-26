@@ -1,0 +1,43 @@
+Functions
+===
+
+In Type-C, functions are first-class citizens, embodying a core principle of the language's design that emphasizes flexibility and performance. There are two primary types of functions: `named functions` and `anonymous functions`. Each type serves unique purposes in Type-C programming, accommodating a wide range of programming patterns from structured module development to functional programming and callbacks.
+
+## Named Functions
+
+Named functions are defined using the `fn` keyword followed by an identifier. These functions are bound to their names in the current scope, making them easily referable. The syntax for defining a named function is as follows:
+
+```tc
+fn functionName(param1: Type1, param2: Type2, ...) -> ReturnType {
+    // Function body
+}
+```
+
+Named functions can be used for recurring operations, logically grouping code, or defining methods and behaviors in modules and classes.
+
+## Anonymous Functions
+
+Anonymous functions, also known as lambda functions or lambda expressions, are defined without a name and can be used in any place where a function is expected. These functions are particularly useful for short-lived operations, such as callbacks, and for operations that don't require a named identifier. The syntax for an anonymous function is a simplified version of the named function, omitting the name:
+
+```tc
+fn(param1: Type1, param2: Type2, ...) -> ReturnType {
+    // Function body
+}
+```
+
+Anonymous functions can be passed as arguments to other functions, returned from functions, and assigned to variables. This makes them a powerful tool for implementing functional programming concepts in Type-C, such as map/reduce operations, closures, and high-order functions.
+
+## Function Features
+
+Both types of functions in Type-C share several advanced features:
+
+- **Type Annotations**: Every function parameter can be annotated with its type, enhancing code readability and safety by enabling compile-time type checking.
+- **First-Class and Higher-Order Functions**: Functions can be passed as arguments to other functions, returned from functions, and assigned to variables. This promotes a functional programming approach, allowing for powerful abstractions and modular code design.
+- **Closures**: Functions can capture and carry with them some context from their scope. This is particularly useful for creating function factories and maintaining state in a functional style.
+
+## Notes:
+
+1. Variadic arguments are not support in Type-C (Variadic functions are functions that can take a variable number of arguments).
+2. Argument mutability can be specified using the `mut` keyword, and is part of the function signature, and must be respected.
+3. Function Return Type must be specied when used within a recursive context, inference engine will fail to infer the type if not specified.
+

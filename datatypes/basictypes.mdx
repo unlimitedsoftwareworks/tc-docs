@@ -1,7 +1,5 @@
-# Basic DataTypes
-
-
-## Basic Data Types
+Basic DataTypes
+===
 
 Like any regular programming language, Type-C provides basic built-in
 data types. These types have a guaranteed fixed size, ensuring that the
@@ -25,3 +23,22 @@ predictable behavior for high-performance computing tasks.
 |`bool`|Boolean value (8-bit sized)      |`true` or `false`|
 |`void`|Usually a return type for functions that has no return value| |
 |`null`|Used both as a type and a value, to indicate that an object is nullable||
+
+Type-C does not provide C compatibility types for basic types, instead, `u8` is compatible with C99 
+`uint8_t`, same for all others.
+
+## Type Casting between basic types
+Type casting in not an instant instruction, inorder to attempt to maintain type safety, Type-C will 
+cast an intermediate type to the target type. This is to prevent loss of data or unexpected results, 
+when applicable.
+
+For example:
+```tc
+let x: f32 = 1f
+let z: u8 = x as u8
+```
+
+In the above example, `x` is a floating point number, and `z` is an unsigned integer. The compiler will first
+convert x into u32, then to u8.
+
+

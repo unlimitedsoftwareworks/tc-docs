@@ -75,3 +75,20 @@ Notice that the logical OR operator `||` will only be evaluated if the left-hand
 In other words, the `||` operator has two usages:
 - Logical or operator: `a || b` where `a` and `b` are booleans, then it behaves as it normally does.
 - Null-fallback operator: `a?.b || c` where `a` is `Nullable` with field `b: T`, and `c: T` are nullable objects, then it will return `a.b` if `a` is not null, otherwise it will return `c`.
+
+## Valid Nullable Types
+Only composite types are allowed to be nullables, which are:
+- Arrays
+- Variants
+- Functions
+- Classes
+- Interfaces
+- Structs
+- Threads
+- Locks
+- Promises
+
+<div role="alert" className="alert alert-error">
+  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+  <span>Nullables cannot be composed of another nullable, meaning you cannot stack them directly, i.e X??</span>
+</div>

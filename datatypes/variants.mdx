@@ -24,9 +24,9 @@ let t = Tree.Binary(
 )
 
 fn sumTree(t: Tree) -> u32 = match t {
-    binary: Tree.Binary => sumTree(binary.lhs) + sumTree(binary.rhs),
-    unary: Tree.Unary => sumTree(unary.uhs),
-    value: Tree.Value => value.val
+    Tree.Binary(lhs, rhs) => sumTree(lhs) + sumTree(rhs),
+    Tree.Unary(uhs): Tree.Unary => sumTree(uhs),
+    Tree.Value: Tree.Value => value.val
 }
 ```
 
@@ -56,12 +56,8 @@ let t = Tree.Binary(
 type FloatTree = Tree<f32>
 
 fn sumTree(t: FloatTree) -> f32 = match t {
-    binary: FloatTree.Binary => sumTree(binary.lhs) + sumTree(binary.rhs),
-    unary: FloatTree.Unary => sumTree(unary.uhs),
-    value: FloatTree.Value => value.val
+    FloatTree.Binary(lhs, rhs) => sumTree(lhs) + sumTree(rhs),
+    FloatTree.Unary(uhs): Tree.Unary => sumTree(uhs),
+    FloatTree.Value: Tree.Value => value.val
 }
 ```
-
-Remember, when using generic variants, inference engine will not always be able to infer the types, so it is recommended
-to specify the generic type to avoid any type conflicts or ambiguity. The last example simplifies code readability by
-using an alias, `FloatTree`, for a generic `Tree<f32>`.

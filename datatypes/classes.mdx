@@ -109,6 +109,7 @@ It is better to think of classes as concrete behaviors rather than a hierarchy o
 - Classes can have static attributes
 - Classes' static methods cannot use the class generic type
 - Classes can extend generic interfaces.
+- Classes constructor must return void, they are only meant to initialize the state of the object.
 
 ## Advanced Topics
 
@@ -121,19 +122,17 @@ type X = class {
     }
 }
 
-
 let z: interface {fn get(x: u32) -> u32} = new X()
 ```
 
 This is completely valid, as long as the interface header is compatible with the generic class constraints. Here is a case where is it is not possible:
 
-```
+```tc
 type X = class {
     fn get<T: {name: String}>(x: T) -> T {
         return x
     }
 }
-
 
 let z: interface {fn get(x: u32) -> u32} = new X()
 ```

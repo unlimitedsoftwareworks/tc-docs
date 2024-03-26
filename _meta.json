@@ -4,11 +4,12 @@
     {"name": "design", "title": "Design and Philosophy"},
     {"name": "algorithms", "title": "Algorithms Implementation"},
     {"name": "basics", "title": "Type-C Basics"},
+    {"name": "functions", "title": "Function Declaration"},
     {
         "name": "datatypes",
         "title": "Data Types",
         "_meta": [
-            {"name": "overview", "title": "Overview"},
+            {"name": "overview", "title": "Data Types Overview"},
             {"name": "basictypes", "title": "Basic Types"},
             {"name": "structs", "title": "Structs"},
             {"name": "enums", "title": "Enums"},
@@ -18,9 +19,10 @@
             {"name": "interfaces", "title": "Interfaces"},
             {"name": "joins", "title": "Joins"},
             {"name": "classes", "title": "Classes"},
-            {"name": "processes", "title": "Processes"},
+            {"name": "nullables", "title": "Nullables"},
+            {"name": "promises", "title": "Promises"},
             {"name": "threads", "title": "Threads"},
-            {"name": "nullables", "title": "Nullables"}
+            {"name": "locks", "title": "Locks"}
         ]
     },
     {"name": "interface-oriented-programming", "title": "Interface-Oriented Programming"},

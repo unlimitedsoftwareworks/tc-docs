@@ -30,7 +30,11 @@ let z: Drawable & Movable = x // OK!
 let a: Draggable & Drawable = x // Error! Square does not implement Draggable
 ```
 
-Notice: Nullables cannot be joined with interfaces. This is because nullables are not interfaces. They are a special type of data type. However, a join type can be nullable. Here is an example:
+<div role="alert" className="alert alert-warning">
+  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+  <span>Nullables cannot be joined with interfaces. This is because nullables are not interfaces. They are a special type of data type. However, a join type can be nullable. Here is an example:</span>
+</div>
+
 ```tc
 type Movable = interface {
     move(x: u32, y: u32) -> void
@@ -47,4 +51,8 @@ type Draggable = interface {
 let x: (Movable & Drawable)? = null
 ```
 
-Please also note that at its core, a join type is an interface type. Hence, no duplicate methods are allowed.
+<div role="alert" className="alert striped1">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <span>From a compiler perspective, joins are transformed into a single interface that groups all methods together, hence all rules that applies to interface, applies the the entire group of joins as well.</span>
+</div>
+
