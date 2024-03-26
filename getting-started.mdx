@@ -1,5 +1,10 @@
 # Getting Started
 
+<div role="alert" className="alert striped1">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <span>The current setup unfortunately requires building everything from source. A better setup will be available as soon good progress is made.</span>
+</div>
+
 ## Installation
 
 Type-C setup currently involves manual work as the the language has not been officially release yet.
@@ -10,9 +15,25 @@ Hence, we will need to manually install the following:
 
 ```bash
 mkdir type-c && cd type-c
-git clone https://github.com/project-type/type-c.git
-git clone https://github.com/project-type/type-v.git
-git clone https://github.com/project-type/stdlib
+git clone https://github.com/unlimitedsoftwareworks/type-c.git
+git clone https://github.com/unlimitedsoftwareworks/type-v.git
+git clone https://github.com/unlimitedsoftwareworks/stdlib
+```
+
+## Building the compiler:
+```bash
+cd type-c
+npm install
+npx tsc
+```
+
+## Building the Virtual Machine:
+```bash
+# from the base type-c directory
+cd type-v
+mkdir build && cd build
+cmake ..
+make
 ```
 
 ## Creating a Project
@@ -32,3 +53,7 @@ To create a new project, we will need to create a new folder, and create a `modu
 ```
 
 The directory of this file is the default project directory. All imports will be resolved from there. Hence within files in subdirectory, importing packages from current module will be resolved from the project root directory.
+
+## Running the project:
+First compiling the project with type-c compiler: `node outs/index.js -c [path-to-module.json folder] -o [output-directory]`
+Then run the output with the type-v virtual machine: `./type-v [output-directory]/bin.tvb`

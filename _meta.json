@@ -1,5 +1,6 @@
 [
     {"name": "introduction", "title": "Introduction"},
+    {"name": "getting-started", "title": "Getting Started"},
     {"name": "hello-world", "title": "Hello World"},
     {"name": "design", "title": "Design and Philosophy"},
     {"name": "algorithms", "title": "Algorithms Implementation"},

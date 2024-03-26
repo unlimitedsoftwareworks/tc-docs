@@ -156,16 +156,16 @@ new <class-name>(<arguments>)
 ```
 
 ## `spawn` Expression
-Identical to `new`, with the exception that it operates on `process` types. `spawn` is a syntactic sugar for `new process` and is used to create a new process. The syntax is as follows:
+Identical to `new`, with the exception that it operates on an expression, to create a thread that runs that expression. The syntax is as follows:
 
 ```tc
 spawn <process-name>(<arguments>)
 ```
 
 ## `await` Expression
-The `await` expression is used to wait for a process to finish. The syntax is as follows:
+The `await` expression is used to wait for a promise to resolve. The syntax is as follows:
 
 ```tc
 let r = await somePromise
 ```
-where `r: T` and `somePromise: Promise<T>`.
+where `r: T` and `somePromise: promise<T>`.
