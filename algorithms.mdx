@@ -1,0 +1,70 @@
+Algorithm Implementation
+===
+
+In this section, we explore the practical applications of Type-C by diving into algorithm implementation. Implementing algorithms will help demonstrate the syntax of Type-C and give you a glimpse of the language's features.
+
+## Fibonacci Sequence
+The Fibonacci sequence is one of the most famous formulas in mathematics and computer science. It starts with 0 and 1, and each subsequent number is the sum of the two preceding ones. Mathematically, the sequence is defined as \( F(n) = F(n-1) + F(n-2) \) with \( F(0) = 0 \) and \( F(1) = 1 \).
+
+```tc
+fn fib(x: u32) -> u32 = match x {
+	0 => 0,
+	1 => 1,
+	_ => fib(n-1) + fib(n-2)
+}
+```
+
+In this code snippet, we define a function `fib` that takes an unsigned 32-bit integer \( x \) and returns an unsigned 32-bit integer. We use pattern matching to define the function recursively:
+
+- If \( x = 0 \), the function returns 0.
+- If \( x = 1 \), the function returns 1.
+- For all other values of \( x \), the function returns `fib(x-1) + fib(x-2)`. This is captured using the wild card value `_`.
+
+This implementation illustrates how straightforward it is to define a recursive function in Type-C, while also showcasing the language's pattern matching capabilities.
+
+## Quick Sort
+Quick Sort is a divide-and-conquer algorithm known for its impressive sorting speed. It works by selecting a 'pivot' element from the array and partitioning the other elements into two sub-arrays, according to whether they are less than or greater than the pivot.
+
+```tc
+// swaps two elements in the array
+fn swap(mut arr: i32[], i: u64, j: u64) {
+    let temp: i32 = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
+    return
+}
+
+// Partition function for the quicksort
+fn partition(mut arr: i32[], low: u64, high: u64) -> u64 {
+    let pivot: i32 = arr[high]
+    let i: u64 = low
+    // i = low - 1 results in an MAX_U64,
+    // hence we just postpone incrementing i
+
+    for let j = low; j < high; j = j + 1 {
+        
+        if arr[j] < pivot {
+            swap(arr, i, j)
+            i = i + 1
+        }
+    }
+    swap(arr, i , high)
+    return (i)
+}
+
+// The main quicksort function
+fn quickSort(mut arr: i32[], low: u64, high: u64) -> void {
+    
+    if low < high {
+        let pi: u64 = partition(arr, low, high)
+        if(pi > 0) {
+            quickSort(arr, low, pi - 1)
+        }
+        if((pi) < high) {
+            quickSort(arr, pi + 1, high)
+        }
+    }
+}
+```
+
+In this implementation, `quicksort` is the main function that takes the array, and two indices, low and high, which define the segment to be sorted. The `partition` function takes the same arguments and rearranges the elements so that all elements greater than the pivot are to its right, and all smaller elements are to its left. `swap` is a utility function that swaps two elements in the array.

@@ -2,11 +2,13 @@
     {"name": "introduction", "title": "Introduction"},
     {"name": "hello-world", "title": "Hello World"},
     {"name": "design", "title": "Design and Philosophy"},
-    {"name": "baics", "title": "Type-C Basics"},
+    {"name": "algorithms", "title": "Algorithms Implementation"},
+    {"name": "basics", "title": "Type-C Basics"},
     {
         "name": "datatypes",
         "title": "Data Types",
         "_meta": [
+            {"name": "overview", "title": "Overview"},
             {"name": "basictypes", "title": "Basic Types"},
             {"name": "structs", "title": "Structs"},
             {"name": "enums", "title": "Enums"},
