@@ -9,7 +9,8 @@ In my instances, it is often desired to share data between threads. Sharing in r
  * to avoid downloading the same file multiple times.
  */
 
-let l = lock(new Map<String, File>())
+let sharedMap = new Map<String, File>()
+let l = new lock(sharedMap)
 
 let downloader = fn(url: String) {
     await l.aquire()
