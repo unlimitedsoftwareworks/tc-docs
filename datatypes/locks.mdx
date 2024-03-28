@@ -52,7 +52,7 @@ type lock<T> = interface {
      * Requests a lock, returns a promise since the lock may
      * not be immediately available.
      */
-    fn request() -> Promise<T>
+    fn request() -> promise<T>
 
     /**
      * Unlocks the lock. immediate.
@@ -65,6 +65,6 @@ type lock<T> = interface {
      * unlocking it afterward. The function passed should 
      * return a Promise to allow asynchronous operations.
      */
-    fn withLock(fn: (data: T) -> Promise<void>) -> Promise<void>
+    fn withLock<V>(fn: (data: T) -> V) -> Promise<V>
 }
 ```
