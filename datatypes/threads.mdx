@@ -1,49 +1,44 @@
 Threads DataType
 ===
-The `thread<T>` type in Type-C represents a higher-level abstraction over operating system threads, designed to facilitate concurrent programming by executing code in parallel and eventually producing a result of type T. This model simplifies the creation and management of threads, making concurrency more accessible and safer.
 
-## Syntax and Usage
-The `thread<T>` type is used to declare variables that will hold references to asynchronous operations. The basic syntax for creating a new thread is:
-```tc
-let v: thread<ReturnType> = spawn someFunc(arguments)
+There are two types of threads in type-c language, `threads` that are spawned using an expression, and `thread` that are spawned using a custom `thread` type.
+
+## Case 1: Spawning an expression
+Spawning an expression creates a new thread that runs concurrently with the current thread. The returned type however is not thread, but a `promise` that can be awaited.
+Once the thread is finished, the promise is resolved with the return value of the thread.
+
+## Case 2: Spawning an interactive thread
+
+<div role="alert" className="alert alert-warning striped1">
+  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+  <span>Warning: This page section a feature that will be implemented in V2, and currently V1 is still being developed</span>
+</div>
+
+`thread<T>` type represents a thread that can be spawned and run concurrently. This is different from regular threads that return a promoise,
+since these threads support communication between them.
+
+```ts
+type Worker = thread {
+    fn on:fetch(url: string) -> string {
+        // download some data ..
+        return data
+    }
+
+    fn on:terminate() {
+        this.terminate();
+    }
+}
+
+let worker = spawn Worker();
+
+// calling an event returns a promise
+worker.fetch("https://example.com").then(fn(data) {
+    println(data);
+})
+
+let data = await worker.fetch("https://example.com");
+println(data);
 ```
 
-- `spawn`: A keyword used to create a new thread that executes the specified function.
-- `functionName(arguments)`: The function to be executed in the thread, along with its arguments.
-- `ReturnType`: The type of the result that the thread will produce upon completion.
-
-## Features
-- **Type Safety**: The `thread<T>` type enforces compile-time type checking, ensuring that the result of the thread execution is of the expected type, enhancing code reliability and safety.
-- **Simplified Concurrency Model**: By abstracting away the complexities of thread management, Type-C makes concurrent programming more accessible, allowing developers to focus on the logic rather than on synchronization and other low-level concerns.
-- **Compatibility with Async/Await Pattern**: The `thread<T>` type integrates seamlessly with the async/await pattern, making it easier to write non-blocking code and to synchronize thread results in a clear and concise manner.
-
-## Implementation Considerations
-- **Resource Management**: Each instance of `thread<T>` consumes system resources. It's important to manage threads wisely, creating them when necessary and ensuring they complete to free up resources.
-- **Error Handling**: Consideration should be given to how errors within a thread are handled and propagated to the caller, especially for operations that may fail.
-- **Synchronization**: While `thread<T>` abstracts much of the complexity, understanding when to use synchronization primitives like Locks is still necessary to avoid data races and deadlocks.
-
-## Example: Asynchronous File Processing
-
-```tc
-fn readFile(path: String) -> String {
-    // Simulate reading a file
-    return "file content"
-}
-
-fn processContent(content: String) -> usize {
-    // Simulate processing file content
-    return content.len()
-}
-
-fn asyncFileProcessingExample() {
-    let contentThread: thread<String> = spawn readFile("path/to/file.txt")
-    let content: String = await contentThread
-
-    let processThread: thread<usize> = spawn processContent(content)
-    let result: usize = await processThread
-
-    println("Processed file length: ", result)
-}
-```
-
-This example highlights how `thread<T>` can be used to perform IO-bound and CPU-bound operations concurrently, showcasing the flexibility and power of Type-C's concurrency model. Through this enriched documentation, developers can gain a deeper understanding of `thread<T>`, enabling them to leverage concurrency to build efficient and scalable Type-C applications.
+`threads` are very similar to classes, in the sense that they can have their own states. But they are not to be confused with classes! They are very different entities.
+Additionally, threads cannot be casted to any other types (even themselves, similar to classes in this aspect).
