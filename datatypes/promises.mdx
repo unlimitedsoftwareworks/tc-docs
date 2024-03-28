@@ -65,35 +65,45 @@ Unlike JavaScript, the `then` method does not return a new promise, it returns t
 
 Here is the basic syntax of `.then` method:
 ```tc
-promise<U>.then<U, V>(fn(res: U) -> V { .. })
-promise<U>.then< U, promise<V> >(
-        fn(res: U) -> promise<V> { .. }
-    ).then<V, W>(
-        fn(res: V) -> W { .. }
-    )
+promise<U>.then<V>(fn(res: U) -> V { .. })
+promise<U>.then< promise<V> >(
+    fn(res: U) -> promise<V> { .. }
+).then<W>(
+    fn(res: V) -> W { .. }
+)
 ```
 
 A very basic example showcasing this as follows:
 ```tc
 fn f1() -> i32 {
     let z: i32 = 1
-
     return z
 }
 
 fn f2() -> u64 {
     let z: u64 = 1
-
     return z
 }
 
 let thread1 = spawn f1()
-thread1.then< i32, promise<u64> >(fn(x: i32) -> promise<u64> {
+
+thread1.then(fn(x: i32) {
     return spawn f2()
-}).then(fn(x: u64) -> void {
+}).then(fn(x: u64)  {
+    return spawn f1()
+}).then<void>(fn(x: i32) {
+    return
+})
+
+let l: lock<u32> = new lock(0)
+l.withLock( fn(x: u32) {
+    return spawn f1()  
+}).then(fn(x: i32) {
     return
 })
 ```
+
+It is recommended to not specify the type argument for the `.then` method, as the compiler can infer the type from the callback function.
 
 ### .then Callback argument mutability
 The callback function passed to the `.then` method cannot have a mutable argument. 
