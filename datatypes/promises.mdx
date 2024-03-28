@@ -94,3 +94,15 @@ thread1.then< i32, promise<u64> >(fn(x: i32) -> promise<u64> {
     return
 })
 ```
+
+### .then Callback argument mutability
+The callback function passed to the `.then` method cannot have a mutable argument. 
+
+Meaning 
+```tc
+thread1.then< i32, promise<u64> >(fn(mut x: i32) -> promise<u64> {
+    return spawn f2()
+})
+```
+
+Is wrong and will not compile.
