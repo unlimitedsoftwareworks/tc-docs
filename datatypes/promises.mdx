@@ -51,3 +51,46 @@ type WriteResponse = variant {
     Error(reason: String)
 }
 ```
+## Promises In Type-C
+Even though promises might sound very much like JavaScript, there is actually a huge difference on how they are implemented in Type-C.
+
+1. **Promise Creation**: Promises cannot be created by the user, they are created within the VM when certain async APIs are called, or spawning a thread for example.
+2. **Resolving Promises**: Promises can only be resolved by the VM, the user cannot resolve a promise.
+3. **Rejecting a Promise**: There is no such thing as rejecting a promise in Type-C. A promise will always return a value, that value could be an error code, or a variant type that represents an error, that's up to the user to decide.
+
+## Promise.then usage
+
+The `promise.then` is a method that takes a callback function as an argument. The callback function will be executed when the promise is resolved. The callback function will be passed the resolved value of the promise as an argument.
+Unlike JavaScript, the `then` method does not return a new promise, it returns the output of the callback function. Hence it can only be cascaded as long as you are returning a promise from the callback function.
+
+Here is the basic syntax of `.then` method:
+```tc
+promise<U>.then<U, V>(fn(res: U) -> V { .. })
+promise<U>.then< U, promise<V> >(
+        fn(res: U) -> promise<V> { .. }
+    ).then<V, W>(
+        fn(res: V) -> W { .. }
+    )
+```
+
+A very basic example showcasing this as follows:
+```tc
+fn f1() -> i32 {
+    let z: i32 = 1
+
+    return z
+}
+
+fn f2() -> u64 {
+    let z: u64 = 1
+
+    return z
+}
+
+let thread1 = spawn f1()
+thread1.then< i32, promise<u64> >(fn(x: i32) -> promise<u64> {
+    return spawn f2()
+}).then(fn(x: u64) -> void {
+    return
+})
+```
