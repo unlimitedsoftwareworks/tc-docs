@@ -63,18 +63,14 @@ let middleName: string? = null
 let upperMidderName = middleName?.toUpperCase()
 ```
 
-In this case, `upperMiddleName` is of type `string?`. Since this operator returns a nullable object, you can chain multiple `?.` operators together, but the end result will always be a nullable object. Hence it only works with nullable data types. However, you can chain it with the `||` Logical OR operator to provide an alternative value:
+In this case, `upperMiddleName` is of type `string?`. Since this operator returns a nullable object, you can chain multiple `?.` operators together, but the end result will always be a nullable object. Hence it only works with nullable data types. However, you can chain it with the `??` Nullish coalescing operator to provide an alternative value:
 
 ```tc
 let middleName: string? = null
-let nameLength = middleName?.length() || 0
+let nameLength = middleName?.length() ?? 0
 ```
 
-Notice that the logical OR operator `||` will only be evaluated if the left-hand side is null. If the left-hand side is not null, the right-hand side will not be evaluated. This is called short-circuiting.
-
-In other words, the `||` operator has two usages:
-- Logical or operator: `a || b` where `a` and `b` are booleans, then it behaves as it normally does.
-- Null-fallback operator: `a?.b || c` where `a` is `Nullable` with field `b: T`, and `c: T` are nullable objects, then it will return `a.b` if `a` is not null, otherwise it will return `c`.
+Notice that the Nullish coalescing operator `??` will only be evaluated if the left-hand side is null. If the left-hand side is not null, the right-hand side will not be evaluated. This is called short-circuiting.
 
 ## Valid Nullable Types
 Only composite types are allowed to be nullables, which are:

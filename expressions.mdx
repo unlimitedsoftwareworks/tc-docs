@@ -10,8 +10,8 @@ Every expression must return a value. That's why, when reviewing `if-else` and `
 | 17         | `new`                 | Object creation                        | LTR           | No           |
 | 16         | `spawn`               | Process spawning                       | LTR           | No           |
 | 16         | `await`               | Asynchronous wait                      | LTR           | No           |
-| 15         | `()`                  | Function call or call overload         | LTR           | Yes          |
-| 15         | `[]`                  | Array subscription or subscription overload | LTR     | Yes          |
+| 15         | `()`                  | Function call                          | LTR           | Yes          |
+| 15         | `[]`                  | Array subscription                     | LTR           | Yes          |
 | 15         | `?.`                  | Nullable member selection              | LTR           | No           |
 | 15         | `.`                   | Member selection                       | LTR           | No           |
 | 14         | `++` (postfix)        | Unary post-increment                   | LTR           | Yes          |
@@ -40,16 +40,17 @@ Every expression must return a value. That's why, when reviewing `if-else` and `
 | 8          | `!=`                  | Relational is not equal to             | LTR           | No           |
 | 7          | `&`                   | Bitwise AND                            | LTR           | Yes          |
 | 6          | `^`                   | Bitwise exclusive OR                   | LTR           | Yes          |
-| 5          | `\|`                   | Bitwise inclusive OR                   | LTR           | Yes          |
+| 5          | `\|`                  | Bitwise inclusive OR                   | LTR           | Yes          |
 | 4          | `&&`                  | Logical AND                            | LTR           | Yes          |
-| 3          | `\|\|`                  | Logical OR                             | LTR           | Yes          |
-| 2          | `if.., if .. else`    | Conditional Expression                 | RTL           | No           |
-| 1          | `=`                   | Assignment                             | RTL           | No           |
-| 1          | `+=`                  | Addition assignment                    | RTL           | No           |
-| 1          | `-=`                  | Subtraction assignment                 | RTL           | No           |
-| 1          | `*=`                  | Multiplication assignment              | RTL           | No           |
-| 1          | `/=`                  | Division assignment                    | RTL           | No           |
-| 1          | `%=`                  | Modulus assignment                     | RTL           | No           |
+| 3          | `\|\|`                | Logical OR                             | LTR           | Yes          |
+| 2          | `??`                  | Nullish coalescing operator            | LTR           | Yes          |
+| 1          | `if,else`             | Conditional Expression                 | RTL           | No           |
+| 0          | `=`                   | Assignment                             | RTL           | No           |
+| 0          | `+=`                  | Addition assignment                    | RTL           | No           |
+| 0          | `-=`                  | Subtraction assignment                 | RTL           | No           |
+| 0          | `*=`                  | Multiplication assignment              | RTL           | No           |
+| 0          | `/=`                  | Division assignment                    | RTL           | No           |
+| 0          | `%=`                  | Modulus assignment                     | RTL           | No           |
 
 
 ## Expressions
@@ -315,7 +316,7 @@ The nullable member access expression is used to access a member of an object th
 
 ```tc
 let x: MyClass? = new MyClass()
-let y: u32 = x?.field || 0
+let y: u32 = x?.field ?? 0
 ```
 
 ### `spawn` Expression
