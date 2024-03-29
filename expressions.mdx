@@ -52,7 +52,156 @@ Every expression must return a value. That's why, when reviewing `if-else` and `
 | 1          | `%=`                  | Modulus assignment                     | RTL           | No           |
 
 
-## Let in Expression
+## Expressions
+Now we will review the list of all expressions in Type-C.
+
+### Array Construction
+This expression constructs a built-in array, syntax:
+```tc
+[<expression>, <expression>, ...]
+```
+
+When no type hint is provided, the type of the array is inferred from the types of the expressions. If the expressions have different types, the type of the array is the common type of the expressions. If there is no common type, the compiler will throw an error.
+
+
+### `await` Expression
+The `await` expression is used to wait for a promise to resolve. The syntax is as follows:
+
+```tc
+let r: T = await <expression>
+```
+where the expression being awaited is a `promise<T>`. await always return the type wrapped within the promise.
+
+### Binary Expression
+Binary expressions are expressions that involve two operands and an operator. The operator can be any of the binary operators listed in the table above.
+Notice that binary expression can translate to class method call when the LHS of the operation is class that override the operator.
+
+### Cast Expression
+The cast expression is used to convert a value from one type to another. Casting is safe by default, meaning the compiler will complain when you are casting from one type to another that is unrelated. Casting is explained further in the [Type Casting](type-casting/) section. Here is a basic example of a cast expression:
+
+```tc
+let x: i32 = 10
+let y: u32 = x as u32 // casting is needed here
+```
+
+### Element Expression
+An element is the most basic expression in Type-C. It can be a variable, function, etc.
+```tc
+let x: i32 = 10
+let y: i32 = x
+```
+`x` is an element expression in the assignment statement.
+
+### Function Call Expression
+A function call expression is used to call a function. The syntax is as follows:
+
+```tc
+let z: u32 = f(arg1, arg2)
+```
+
+A function call can also be a method call on an object that overloads the `__call__` method.
+
+Another example is:
+```tc
+MyClass.MyStaticMethod(1, 2, 3)
+```
+
+In this example, the function call is `MyClass.MyStaticMethod` applies to the arguments `(1, 2, 3)`.
+
+
+### If-Else Expressions
+In type-c, if-else can be used as expression, similar to python
+```tc
+let y: i32 = -1
+
+let x: i32 = if y > 0 => y
+             else -y
+
+let z: i32 = if y > 0 => y
+			 if y < 0 => x
+			 else 0
+```
+
+The values and condition pairs `<value> if <condition>` must be comma separate, and the else expression is mandatory at the end, since expressions must always have a value.
+
+The `if-else` expression shares the same limitation as the `let .. in` construct. It is designed to be used at the root level of an expression for clarity and correct parsing. When used within a larger expression, parentheses should be used to scope the if-else block explicitly.
+
+### Index Access Expression
+The index access expression is used to access an element in an array. The syntax is as follows:
+
+```tc
+let x: u32[] = [1, 2, 3]
+let y: u32 = x[0]
+```
+
+A class that overloads the `__index__` method can also use any datatype for indexing, even strings and such.
+
+### IndexSet Expression
+
+When the compiler encounters an assignment to an array element, it will generate an `IndexSet` expression. This expression is used to set the value of an element in an array. The syntax is as follows:
+```tc
+let x: u32[] = [1, 2, 3]
+x[0] = 4 
+```
+from a compiler perspective, `x[0] = 4` is translated to `IndexSet(target: x, value: 4, indexes: [0])`, the reason for this is that an indexing operation can have multiple indexes in theory:
+
+```tc
+let x: u32[] = [1, 2, 3]
+x[0, 1] = 4 // fail! only one index is allowed
+
+
+type MyArray = class {
+    // ...
+    fn __index_set__(value: u32, index1: u32, index2: u32) {
+        // ...
+    }
+}
+
+let x: MyArray = new MyArray()
+x[0, 1] = 4 // success! the class MyArray has an __index_set__ method with multiple indexes
+```
+
+So the built-in array type only allows one index, but a custom class can allow multiple indexes.
+
+### Instance Check Expression
+This expression is similar to `instanceof` in other languages. However in type-c, the keyword `is` is chosen since it is not just about classes and interfaces, but also variants. Also remember that Type-C matches types by structure and not names. So instead of thinking "is this object an instance of this class", think "does this data match with that".
+
+Here are the acceptable cases:
+1. `class` is `interface`
+2. `interface` is `class`
+3. `interface` is `interface`
+4. `Variant` is `Variant Constructor`
+
+
+
+### Lambda Expressions and Clojures
+
+To create an anonymous function in Type-C, you can use the `fn` keyword, followed by parameter declarations and the function's body (notice that it has no name, because it is anonymous). These functions create a contained scope, making them perfect for tasks like mapping, filtering, or reducing data collections. Let's take a look at an example of an anonymous function in Type-C:
+
+```tc
+let numbers: u8[] = [1, 2, 3, 4, 5]
+let squares = numbers.map(fn (n: u8) = n * n)
+```
+
+In this code snippet, the map function receives an anonymous function that specifies how each element in the numbers array should be transformed. Closures, an extension of anonymous functions, introduce a fascinating concept—they can capture variables from their surrounding lexical scope. These variables become "bound" to the closure's context, even after the enclosing function has completed its execution. Closures are invaluable for creating functions that encapsulate state, resulting in elegant and concise code patterns.
+
+Consider this example of a closure in Type-C:
+```tc
+fn createCounter() -> fn () -> u32 {
+    let count = 0
+    return fn () -> u32 {
+        count += 1
+        return count
+    }
+}
+
+let counter = createCounter()
+println("counter = " + counter()) // Output: 1
+println("counter = " + counter()) // Output: 2
+```
+
+
+### Let in Expression
 The `let .. in` construct allows you to introduce a new variable and make it available within a specific expression's scope. This construct is particularly useful when you have a temporary value that is only needed within a limited part of your code and you want to avoid polluting the outer scope. Here's the general syntax:
 
 ```tc
@@ -90,57 +239,31 @@ y + (let x: u32 = 2 in x * x) // Evaluates correctly, parentheses scope the let 
 Developers are encouraged to use `let .. in` at the root level or to always include parentheses when nesting within other expressions to ensure clarity and correct evaluation order.
 
 
-## Lambda Expressions and Clojures
-Anonymous functions, often known as Lambda are versatile constructs allow us to define functions on the fly, without the need for assigning them specific names. Anonymous functions find their sweet spot in situations where a concise, short-lived function is essential, such as for callbacks or quick data transformations. To create an anonymous function in Type-C, you can use the `fn` keyword, followed by parameter declarations and the function's body (notice that it has no name, because it is anonymous). These functions create a contained scope, making them perfect for tasks like mapping, filtering, or reducing data collections. Let's take a look at an example of an anonymous function in Type-C:
-
-```tc
-let numbers: u8[] = [1, 2, 3, 4, 5]
-let squares = numbers.map(fn (n: u8) = n * n)
-```
-
-In this code snippet, the map function receives an anonymous function that specifies how each element in the numbers array should be transformed. Closures, an extension of anonymous functions, introduce a fascinating concept—they can capture variables from their surrounding lexical scope. These variables become "bound" to the closure's context, even after the enclosing function has completed its execution. Closures are invaluable for creating functions that encapsulate state, resulting in elegant and concise code patterns.
-
-Consider this example of a closure in Type-C:
-```tc
-fn createCounter() -> fn () -> u32 {
-    let count = 0
-    return fn () -> u32 {
-        count += 1
-        return count
-    }
-}
-
-let counter = createCounter()
-io.print(counter()) // Output: 1
-io.print(counter()) // Output: 2
-```
-
 In the code above, the `createCounter` function returns a closure that captures the count variable. Each time the closure is invoked, the count increments, and this state is preserved across multiple calls, illustrating the power of closures. Anonymous functions and closures in Type-C elevate the language's capabilities, allowing developers to craft concise and expressive code. These constructs are especially valuable when it comes to encapsulating behavior and state within self-contained units. They enable modular and clean coding practices, making your code more readable and maintainable.
 
-## If-Else Expressions
-In type-c, if-else can be used as expression, similar to python
-```tc
-let y: i32 = -1
+### Literal Expression
+A literal expression is any literal values, and there few subcategories:
 
-let x: i32 = if y > 0 => y
-             else -y
+- Literal strings such as `"hello"` which gets transformed into standard String objects by the compiler
+- Binary string literals which are treated as byte arrays such as `b"hello"`
+- Binary integer literal
+- Octal integer literal
+- Decimal integer literal
+- Hexadecimal integer literal
+- Float literal
+- Double literal
+- Boolean literal
+- Null literal
 
-let z: i32 = if y > 0 => y
-			 if y < 0 => x
-			 else 0
-```
 
-The values and condition pairs `<value> if <condition>` must be comma separate, and the else expression is mandatory at the end, since expressions must always have a value.
 
-The `if-else` expression shares the same limitation as the `let .. in` construct. It is designed to be used at the root level of an expression for clarity and correct parsing. When used within a larger expression, parentheses should be used to scope the if-else block explicitly.
-
-## Pattern Matching
-Pattern matching is discussed in its own section at [Pattern Matching](pattern-matching/), but they can be used as expressions as well.
+### Match Expression
+Pattern matching is discussed in its own section at [Pattern Matching](pattern-matching/), but they can be used as expressions as well. A match expression must always return a value (otherwise it is not an expression), hence, a match expression always require a default wildcard branch (even if semantically it is not needed) since current, Type-C doesn't perform exhaustiveness check on match expressions.
 
 ```tc
 fn fib(n: u32) -> u32 = match n {
     1 => 1,
-    2 => 1,
+    2 => 2,
     _ => fib(n - 1) + fib(n - 2)
 }
 ```
@@ -148,24 +271,76 @@ fn fib(n: u32) -> u32 = match n {
 In the previous example, the `match` expression is used as the body of the `fib` function. The `match` expression evaluates to a value, which is then returned by the function. This is a common pattern in Type-C, where a function's body is a single expression that evaluates to a value. This is a powerful and concise way to write functions, and it is encouraged in Type-C.
 
 
-## `new` Expression
+### Member Access Expression
+A member access expression is used to access a member of an object, such as a field or method. The syntax is as follows:
+```ts
+let x: MyClass = new MyClass()
+let y: u32 = x.field
+```
+
+Member access is not limited to classes, as it is also used for getting the fields of a structure, variant, static class methods/attributes, etc.
+
+```ts
+type Error = variant {
+    Ok(code: u32), 
+    Err(message: String)
+}
+
+let code = Error.Ok(200).code
+```
+In the last line, there are 2 member access expression, one is applied to the `Error` datatype to access its constructor `Ok` and the second is on the variant constructor to access its attribute `code`.
+
+### Named Struct Expression
+As the name suggests, this expression is used to create structs with named fields. The syntax is as follows:
+
+```ts
+let x: MyStruct = MyStruct { field1: value1, field2: value2 }
+```
+
+### `new` Expression
 The `new` expression is used to create a new instance of a class. The syntax is as follows:
 
 ```tc
 new <class-name>(<arguments>)
 ```
 
-## `spawn` Expression
-Identical to `new`, with the exception that it operates on an expression, to create a thread that runs that expression. The syntax is as follows:
+Also, `new` is also used to create `lock` objects:
 
 ```tc
-spawn <process-name>(<arguments>)
+let lock<String> = new Lock("Mary")
 ```
 
-## `await` Expression
-The `await` expression is used to wait for a promise to resolve. The syntax is as follows:
+### Nullable Member Access Expression:
+The nullable member access expression is used to access a member of an object that may be null. Its behavior is very similar to the member access expression, but it can only be applied to nullable types. The syntax is as follows:
 
 ```tc
-let r = await somePromise
+let x: MyClass? = new MyClass()
+let y: u32 = x?.field || 0
 ```
-where `r: T` and `somePromise: promise<T>`.
+
+### `spawn` Expression
+Spawn expression is used to spawn a thread that runs concurrency with the main thread. The syntax is as follows:
+
+```tc
+let res: promise<u32> = spawn fib(100)
+```
+
+### This Expression:
+The `this` expression is used to access the current object's fields and methods. Hence it is only valid within a class.
+
+### Unary Expression:
+Unary expressions are expressions that involve a single operand and an operator. 
+
+### Unnamed Struct Expression
+This expression is used to create structs with unnamed fields. Notice that such expression requires a type hint, since the compiler can't infer the type of the struct. The syntax is as follows:
+
+```
+type MyStruct = {
+    number: u32,
+    name: String
+}
+
+let x: MyStruct = { 10, "John" }
+```
+
+When creating an unnamed struct, the order of the fields must match the order of the fields in the struct definition. Also, the fields must be comma-separated.
