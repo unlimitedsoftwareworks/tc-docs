@@ -318,6 +318,34 @@ The nullable member access expression is used to access a member of an object th
 let x: MyClass? = new MyClass()
 let y: u32 = x?.field ?? 0
 ```
+The Nullable member access expression has two behaviors:
+1. When used without the nullish coalescing operator `??`, it returns a nullable type.
+2. When used with the nullish coalescing operator `??`, it returns a non-nullable type.
+
+#### Case 1: Nullable Member Access without Nullish Coalescing Operator
+The result of a nullable member access expression, must be nullable. For example:
+```tc
+let point: {x: u32, y: u32}? = {1, 1}
+let x: u32 = point?.x // Invalid
+```
+
+Since the `point` is nullable, the result of `point?.x` has the potential to be null, but since the type of the attribute `x` is `u32`, and a `u32` cannot be a nullable (numbers can't be null!), the compiler will generate an error.
+
+```tc
+let point: {x: u32, y: u32, desc: String}? = {1, 1, "point in space!"}
+let desc = point?.desc // Valid
+```
+
+Since `String` is a class and can be nullable, the result of `point?.desc` is a nullable `String`.
+
+#### Case 2: Nullable Member Access with Nullish Coalescing Operator
+When using `?.` with `??`, there is a guarantee that the result will be non-nullable. For example:
+
+```tc
+let point: {x: u32, y: u32}? = {1, 1}
+let x: u32 = point?.x ?? 0 // Valid
+```
+The compiler will realise that the result of `point?.x` is nullable, and since the nullish coalescing operator `??` is used, the result of the expression will be a valid data type.
 
 ### `spawn` Expression
 Spawn expression is used to spawn a thread that runs concurrency with the main thread. The syntax is as follows:
