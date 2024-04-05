@@ -1,0 +1,68 @@
+Inference Engine
+===
+
+The Inference Engine is part of the compiler that can infer data type of some values without explicitely specifying it.
+While Type-C is strongly typed, it can be tedious to specify the type of every value, especially when the type is obvious.
+
+Since Inference engine is major component of the compiler, it is crutial to understand its behavior and limitations.
+
+
+## Inference Engine Basics 
+Before we dive any deeper, we need to introduce some terms and concepts.
+
+- `Inferred Type`: A type assigned to an expression during inference.
+- `Hint Type`: The Expected data type of an expression.
+
+For example:
+```tc
+let x: u32 = 1
+let z: u64 = 1
+z = x
+```
+
+Let's consider the expression `z = x`. Since we have an assignment, the compiler will make sure the type of `x` is compatible with the type of `z`. Hence, the compiler will perform the following steps:
+1. Infer the LHS, `z` and returns type of `z`, yielding `u64`.
+2. Since we have an assignment, it will infer the RHS, `x` with a hint type of `u64` and returns type of `x`.
+
+`x` on its own is an expression, and will have an Inferred Type of `u32` and a Hint Type of `u64`. A type checking is performed, and since `u64` is wide enough to hold `u32`, the compiler will not raise an error.
+
+
+### Function Return Type
+Let's consider a simple function, that takes a struct argument and returns a field of the struct.
+
+```tc
+fn printField(s: {name: String, data: u32}) = s.data
+```
+
+The compiler notice that a return type is missing and will attempt to infer it. Since our function has a simple expression as a default return statement, it will be evaluate and its result will be used as the return type. In this case, the return type of the function will be `u32`.
+
+### Function Arguments
+
+When calling a regular function, the compiler will infer the type of the arguments, allowing you to use unnamed structures as structs or arrays,
+
+```tc
+fn printField(s: {name: String, data: u32}) = s.data
+
+printField({"test", 99}) // OK!
+```
+
+### Generic Functions
+If a method is generic, the same logic applies, the compiler will attempt to infer the type as well as generics from the arguments usage. While this makes it easy to write generic functions, it can be problematic when you are using the generic type not in the headers, but within the function.
+The compiler will **not** and **cannot** infer the generic type arguments from the function body, only header is used to extract generic types.
+
+### Method Calls
+Method calls are slightly different, since they are also allow method overloading, meaning you can have the same method name with different arguments.
+Let's explore an example:
+
+```tc
+type String = class {
+    fn cat(s: String) -> String { ... }
+    fn cat(s: u32) -> String { ... }
+}
+
+let s = new String()
+s.cat(3)
+```
+In order for the compiler to detect which method to call, in the call `s.cat(3)`, it will infer the type of `3` as `u32` and then attempt to find a method that matches the signature `fn cat(s: u32) -> String`. 
+Meaning, it cannot use the function argument as hint when inferring arguments, since there can be multiple. Hence it will infer the arguments of the function without any *hint*, so using any unnamed structure will result in an error.
+

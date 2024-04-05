@@ -27,6 +27,11 @@ fn(param1: Type1, param2: Type2, ...) -> ReturnType {
 
 Anonymous functions can be passed as arguments to other functions, returned from functions, and assigned to variables. This makes them a powerful tool for implementing functional programming concepts in Type-C, such as map/reduce operations, closures, and high-order functions.
 
+## Function Return Type Inference
+If a function doesn't have a specified return type, the compiler will attempt to infer it. This is done by analyzing the function body and determining the type of the value that the function returns. If the function has multiple return statements, the compiler will attempt to determine the common type. If the compiler is unable to infer the return type, an error will be thrown, and the return type must be explicitly specified.
+
+Additionally, if a function is recursive or within a recursive chain with another function, the return type must be explicitly specified.
+
 ## Function Features
 
 Both types of functions in Type-C share several advanced features:
@@ -35,9 +40,23 @@ Both types of functions in Type-C share several advanced features:
 - **First-Class and Higher-Order Functions**: Functions can be passed as arguments to other functions, returned from functions, and assigned to variables. This promotes a functional programming approach, allowing for powerful abstractions and modular code design.
 - **Closures**: Functions can capture and carry with them some context from their scope. This is particularly useful for creating function factories and maintaining state in a functional style.
 
+## Expression Functions
+
+In Type-C a function body can be written as a simple expression if the function doesn't require very sophisticated logic. This is called an `expression function`. The syntax for an expression function is as follows:
+
+```tc
+fn fib(n: u32) -> u32 = match n {
+    0 => 0,
+    1 => 1,
+    _ => fib(n - 1) + fib(n - 2)
+}
+```
+
 ## Notes:
 
 1. Variadic arguments are not support in Type-C (Variadic functions are functions that can take a variable number of arguments).
 2. Argument mutability can be specified using the `mut` keyword, and is part of the function signature, and must be respected.
 3. Function Return Type must be specied when used within a recursive context, inference engine will fail to infer the type if not specified.
+
+import ts from "typescript"
 

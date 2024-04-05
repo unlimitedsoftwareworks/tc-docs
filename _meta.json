@@ -33,6 +33,7 @@
     {"name": "type-casting", "title": "Type Casting"},
     {"name": "type-compatibility", "title": "Type Compatibility"},
     {"name": "pattern-matching", "title": "Pattern Matching"},
+    {"name": "inference-engine", "title": "Inference Engine"},
     {"name": "ffi", "title": "Foreign Function Interface"},
     {"name": "concurrency", "title": "Concurrency Model"}
 ]
