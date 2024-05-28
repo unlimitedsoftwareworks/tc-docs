@@ -1,16 +1,12 @@
 [
     {"name": "introduction", "title": "Introduction"},
-    {"name": "getting-started", "title": "Getting Started"},
     {"name": "hello-world", "title": "Hello World"},
     {"name": "design", "title": "Design and Philosophy"},
-    {"name": "algorithms", "title": "Algorithms Implementation"},
-    {"name": "basics", "title": "Type-C Basics"},
-    {"name": "functions", "title": "Function Declaration"},
+    {"name": "baics", "title": "Type-C Basics"},
     {
         "name": "datatypes",
         "title": "Data Types",
         "_meta": [
-            {"name": "overview", "title": "Data Types Overview"},
             {"name": "basictypes", "title": "Basic Types"},
             {"name": "structs", "title": "Structs"},
             {"name": "enums", "title": "Enums"},
@@ -20,10 +16,10 @@
             {"name": "interfaces", "title": "Interfaces"},
             {"name": "joins", "title": "Joins"},
             {"name": "classes", "title": "Classes"},
-            {"name": "nullables", "title": "Nullables"},
-            {"name": "promises", "title": "Promises"},
+            {"name": "processes", "title": "Processes"},
             {"name": "threads", "title": "Threads"},
-            {"name": "locks", "title": "Locks"}
+            {"name": "nullables", "title": "Nullables"},
+            {"name": "tuples", "title": "Tuples"}
         ]
     },
     {"name": "interface-oriented-programming", "title": "Interface-Oriented Programming"},
@@ -33,7 +29,6 @@
     {"name": "type-casting", "title": "Type Casting"},
     {"name": "type-compatibility", "title": "Type Compatibility"},
     {"name": "pattern-matching", "title": "Pattern Matching"},
-    {"name": "inference-engine", "title": "Inference Engine"},
     {"name": "ffi", "title": "Foreign Function Interface"},
     {"name": "concurrency", "title": "Concurrency Model"}
 ]

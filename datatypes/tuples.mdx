@@ -1,0 +1,60 @@
+
+# Tuples
+
+Tuples data types are not directly used by the user, they are used as a mechanism to allow functions to return multiple values.
+
+Tuples are expected only when when parsing function return types, and are not used in any other context.
+
+```tc
+fn doStuff(x: u32) -> (u32, u32) = (x + 1, x + 2)
+```
+
+Since Type-C supports anonymous functions and to avoid ambiguity within the compiler, the parenthesis are required to indicate the expressions enclosed are a tuple.
+
+```tc
+fn callAFunc(f: fn(x: u32) -> (u32, u32), x: u32) -> (u32, u32) = f(x)
+```
+
+## Tuples Values Unpacking
+A single variable cannot hold a tuple, but you can unpack a tuple into multiple variables.
+
+```tc
+fn doStuff(x: u32) -> (u32, u32) = (x + 1, x + 2)
+
+fn main() {
+    let a, b = doStuff(1)
+    io.println(a)
+    io.println(b)
+}
+```
+
+## Skipping Values During Unpacking
+
+When reading values from a tuple, it is possible to use `_` to skip values.
+
+```tc
+fn doStuff(x: u32) -> (u32, u32, u32) = (x + 1, x + 2, x + 3)
+
+fn main() {
+    let a, _, c = doStuff(1)
+    io.println(a)
+    io.println(c)
+}
+```
+
+## Return statement
+
+When returning a tuple from within a function, the writing is the same if it is an expression function or a statement function declaration, here is a snippet showcasing both cases:
+
+```tc
+fn doStuff(x: u32) -> (u32, u32) {
+    return (x+1, x+2)
+}
+
+// or
+
+fn doStuff(x: u32) -> (u32, u32) = (x+1, x+2)
+```
+
+It is important to notice that the comma is used primarly as a separator within Type-C, meaning that stacking expression with a comma will generally result in a compile-time error. The only expection to this 
+is when returning a tuple from a function, meaning right after the function assignment or the return statement.
