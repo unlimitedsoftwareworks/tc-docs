@@ -2,7 +2,7 @@
     {"name": "introduction", "title": "Introduction"},
     {"name": "hello-world", "title": "Hello World"},
     {"name": "design", "title": "Design and Philosophy"},
-    {"name": "baics", "title": "Type-C Basics"},
+    {"name": "basics", "title": "Type-C Basics"},
     {
         "name": "datatypes",
         "title": "Data Types",
