@@ -17,7 +17,7 @@
             {"name": "interfaces", "title": "Interfaces"},
             {"name": "joins", "title": "Joins"},
             {"name": "classes", "title": "Classes"},
-            {"name": "Promises", "title": "Promises"},
+            {"name": "promises", "title": "Promises"},
             {"name": "threads", "title": "Threads"},
             {"name": "nullables", "title": "Nullables"},
             {"name": "locks", "title": "Locks"},
