@@ -7,6 +7,7 @@
         "name": "datatypes",
         "title": "Data Types",
         "_meta": [
+            {"name": "Overview", "title": "Overview"},
             {"name": "basictypes", "title": "Basic Types"},
             {"name": "structs", "title": "Structs"},
             {"name": "enums", "title": "Enums"},
@@ -16,9 +17,10 @@
             {"name": "interfaces", "title": "Interfaces"},
             {"name": "joins", "title": "Joins"},
             {"name": "classes", "title": "Classes"},
-            {"name": "processes", "title": "Processes"},
+            {"name": "Promises", "title": "Promises"},
             {"name": "threads", "title": "Threads"},
             {"name": "nullables", "title": "Nullables"},
+            {"name": "locks", "title": "Locks"},
             {"name": "tuples", "title": "Tuples"}
         ]
     },
