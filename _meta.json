@@ -7,7 +7,7 @@
         "name": "datatypes",
         "title": "Data Types",
         "_meta": [
-            {"name": "Overview", "title": "Overview"},
+            {"name": "overview", "title": "Overview"},
             {"name": "basictypes", "title": "Basic Types"},
             {"name": "structs", "title": "Structs"},
             {"name": "enums", "title": "Enums"},
