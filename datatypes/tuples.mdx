@@ -22,7 +22,7 @@ A single variable cannot hold a tuple, but you can unpack a tuple into multiple 
 fn doStuff(x: u32) -> (u32, u32) = (x + 1, x + 2)
 
 fn main() {
-    let a, b = doStuff(1)
+    let (a, b) = doStuff(1)
     io.println(a)
     io.println(b)
 }
@@ -36,7 +36,7 @@ When reading values from a tuple, it is possible to use `_` to skip values.
 fn doStuff(x: u32) -> (u32, u32, u32) = (x + 1, x + 2, x + 3)
 
 fn main() {
-    let a, _, c = doStuff(1)
+    let (a, _, c) = doStuff(1)
     io.println(a)
     io.println(c)
 }
