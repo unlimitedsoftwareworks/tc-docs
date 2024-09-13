@@ -1,9 +1,14 @@
 # Type-C Design and Philosophy
 
-Before we dissect the intricate features and functionalities of Type-C, it's crucial to take a step back and understand the foundational principles that underpin its creation. This section aims to elucidate the key design goals and underlying philosophy that serve as the backbone of the language. From its commitment to performance optimization and code readability, to its focus on providing a seamless developer experience, these guiding tenets set the tone for what Type-C aspires to be. In this section, we will unpack these core objectives and explore how they translate into the language's practical aspects, setting the context for the technical discussions that will follow.
+This section aims to showcase the key design goals and underlying philosophy that serve as the backbone of the language. 
+
 
 ## Interface Oriented Programming
-Modern programming has primarily leaned towards Object Oriented Programming (OOP), a paradigm that, while revolutionary, comes with its own set of drawbacks. Inheritance in OOP, for example, often results in rigid, tightly-coupled systems that become burdensome to extend or modify. Encapsulation, while safeguarding data, poses challenges concerning data ownership and leads to murky accessibility rules. Type-C addresses these issues by moving from an object-centric to a behavior-centric model. Behaviors are defined through interfaces, much like in Java, which helps to tackle some of the inherent limitations of traditional OOP. Let's talk about the advantages of such a model:
+Modern programming has primarily leaned towards Object Oriented Programming (OOP), a paradigm that, while revolutionary, comes with its own set of drawbacks. Inheritance in OOP, for example, often results in rigid, 
+tightly-coupled systems that become burdensome to extend or modify. Encapsulation, while safeguarding data, poses challenges concerning data ownership and leads to murky accessibility rules.
+ Type-C addresses these issues by moving from an object-centric to a behavior-centric model. Behaviors are defined through interfaces, much like in Java, which helps to tackle some of the inherent limitations of traditional 
+ OOP. Let's talk about the advantages of such a model:
+
 - **Enhanced Code Modularity:** Final classes provide a stable foundation for defining predictable and maintainable behaviors.
 - **Enforced Design by Contract:** Type-C's focus on interfaces and behaviors naturally lends itself to a Design by Contract methodology. Interfaces act as contracts that concrete classes must fulfill, thereby boosting code reliability and predictability.
 - **Reduced Complexity:** The focus on behaviors and interfaces simplifies Type-C's constructs, leading to straightforward, less complex code.
@@ -11,7 +16,9 @@ Modern programming has primarily leaned towards Object Oriented Programming (OOP
 - **Encouraging Composition:** Type-C promotes composition over inheritance. Rather than inheriting attributes and methods from a base class, developers can compose objects from multiple interfaces, resulting in a flexible, loosely-coupled code structure.
 - **Stateless Encapsulation:** Unlike traditional OOP, where encapsulation is often tied to the object's state, Type-C's interface-oriented paradigm encourages encapsulation through behavior. Interfaces define what actions can be performed but not how data is stored, reducing conflicts over data ownership and providing clearer accessibility rules, while still giving the developer the possibility to cast the interface to its actual class and modify the state if needed.
 
-In conclusion, while behavior-driven programming in Type-C does not profess to be a panacea for all programming challenges, it offers a robust alternative to traditional OOP paradigms. It brings about increased modularity, contract-driven development, and a focus on behaviors, among other benefits. However, the power of Type-C comes with its own set of responsibilities. Best practices are still critical to harnessing its full potential, lest any misuse of its features turn into liabilities. Let's also review some the drawbacks of this model.
+In conclusion, while behavior-driven programming in Type-C does not profess to be a panacea for all programming challenges, it offers a robust alternative to traditional OOP paradigms. It brings about increased modularity, 
+contract-driven development, and a focus on behaviors, among other benefits. However, the power of Type-C comes with its own set of responsibilities. Best practices are still critical to harnessing its full potential, 
+lest any misuse of its features turn into liabilities. Let's also review some the drawbacks of this model.
 
 - **Potential for Contract Violation:** While interfaces define contracts, they can't enforce them at runtime. Therefore, a class that poorly implements an interface can lead to unexpected behavior.
 - **Increased Initial Complexity:** The focus on defining behaviors through interfaces can increase the initial development time and may require a deeper understanding of the domain.
@@ -53,7 +60,8 @@ match responseObject {
 
 ## Mutability, Immutability and Pure Functions
 
-In Type-C, variables are mutable by default. However, the programmer can define an immutable entity through explicit declarations. Here's how you declare immutable and mutable variables and functions in Type-C:
+In Type-C, variables are mutable by default. However, the programmer can define an immutable entity through explicit declarations. 
+Here's how you declare immutable and mutable variables and functions in Type-C:
 
 ```tc
 class Rect {
@@ -108,6 +116,4 @@ Type-C emphasizes strong, static typing with structural equivalence:
 This strong typing philosophy ensures a balance between flexibility and robustness, fostering a development environment conducive to producing high-quality, maintainable software.
 
 ## Concurrency
-Type-C uses regular OS-threading for concurrency, with a focus on simplicity and predictability. The language provides a straightforward threading model that allows developers to create and manage threads with ease. By leveraging the underlying OS threading mechanisms, Type-C ensures that concurrency is handled efficiently and effectively. The language's concurrency model is designed to be intuitive and easy to use, enabling developers to write concurrent code without the complexity often associated with multithreading. The language has built-in support for Locks, threads, and other synchronization primitives, making it easy to write safe and efficient concurrent code.
-
-Additionally, Type-C is non-blocking, meaning that within a single thread, the VM will not pause on I/O operations (unless explicitly used `sync` APIs). This allows for efficient use of system resources and ensures that the program remains responsive even when performing I/O operations. By combining these features, Type-C provides a powerful and flexible concurrency model that enables developers to write efficient, scalable, and responsive applications.
+Concurrency is still undergoing development and is not yet fully implemented.

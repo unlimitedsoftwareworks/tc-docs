@@ -22,9 +22,7 @@
             {"name": "classes", "title": "Classes"},
             {"name": "nullables", "title": "Nullables"},
             {"name": "tuples", "title": "Tuples"},
-            {"name": "promises", "title": "Promises"},
-            {"name": "threads", "title": "Threads"},
-            {"name": "locks", "title": "Locks"}
+            {"name": "coroutines", "title": "Coroutines"}
         ]
     },
     {"name": "interface-oriented-programming", "title": "Interface-Oriented Programming"},
@@ -36,5 +34,5 @@
     {"name": "pattern-matching", "title": "Pattern Matching"},
     {"name": "inference-engine", "title": "Inference Engine"},
     {"name": "ffi", "title": "Foreign Function Interface"},
-    {"name": "concurrency", "title": "Concurrency Model"}
+    {"name": "coroutines", "title": "Coroutines"}
 ]

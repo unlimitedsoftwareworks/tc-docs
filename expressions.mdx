@@ -373,3 +373,63 @@ let x: MyStruct = { 10, "John" }
 ```
 
 When creating an unnamed struct, the order of the fields must match the order of the fields in the struct definition. Also, the fields must be comma-separated.
+
+
+## Do Expressions
+
+**Do expressions** provide a clear and concise way to execute a block of code and return a value. Unlike standard blocks, which are used for grouping statements, `do` expressions evaluate the block as an expression and return a result. The syntax is as follows:
+
+```tc
+let x: u32 = do {
+    let y: u32 = 10
+    return y * y
+}
+```
+In this example, the variable x is assigned the result of the do block, where the local variable y is computed and subsequently returned. The key feature is that the entire block is treated as a single expression, with its return value becoming the result of the assignment.
+
+Purpose and Clarity
+
+By using do expressions, you encapsulate a sequence of computations in a clear, self-contained block, making the intent of your code more obvious. 
+Instead of having to analyze line-by-line to infer the purpose of intermediate steps, the do keyword immediately signals that the block is intended
+ to produce a final result.
+This approach promotes cleaner, more readable code, particularly in cases where complex logic or multiple statements are needed to compute a value. 
+The do expression helps to separate the “how” of the computation from the “what” of the result, improving both intent and structure.
+
+#### Example Usage:
+```tc
+let result: f64 = do {
+    let a: f64 = 3.14;
+    let b: f64 = 2.71;
+    return a * b + 1;
+}
+
+println("Result = " + result);
+```
+Compare it against:
+```
+let a: f64 = 3.14;
+let b: f64 = 2.71;
+let result = a * b + 1;
+println("Result = " + result);
+```
+Variables declared within the do block are not visible outside of it. This helps to avoid variable name clashes and to make the code more readable. 
+Each do block has its own local scope, ensuring that the intermediate variables used in computations don’t interfere with the surrounding code.
+
+This approach promotes cleaner, more readable code, particularly in cases where complex logic or multiple statements are needed to compute a value. 
+The do expression helps to separate the “how” of the computation from the “what” of the result, improving both intent and structure.
+
+On top of that, this can potentially be optimized by the compiler, since the entire block can be treated as a single expression, and the compiler 
+can optimize the code accordingly.
+
+### Potential Pitfalls
+Returns within a do expression must be returned with the `return` keyword. Meaning if you are
+within a do expression within a function, you cannot return from the function by returning from
+the do expression. 
+
+```tc
+fn example() -> u32 {
+    return do {
+        let x: u32 = 10
+        return x // applies only to the do expression block
+    } + 1
+}
