@@ -1,0 +1,120 @@
+# Immutability in Type-C
+Type-C enforces mutability through slightly unconventional ways.
+
+## Immutability
+Type-C doesn't enforce value immutability, but rather reference immutability.
+
+```tc
+let const x = 4
+let z = x // Ok
+z = 5 // Ok
+```
+
+This is because you can still safely use `x` after `z` is changed, since the change of `z` doesn't affect `x`.
+
+However, if `x` is an object, then it's a different story.
+
+```tc
+let const x = {y: 4}
+let z = x // Error
+```
+
+Since `x` is declared as `const`, it cannot be assigned to a non-const variable.
+
+Immutability is inherited. Meaning, if a variable is declared as `const`, all its properties are also `const`.
+
+```tc
+let const vec = {x: 1, y: {z: 2}}
+let const z1 = vec.y // Ok
+let z2 = vec.y // Error
+```
+
+So now we have established that:
+1. Immutability protects the reference (and sub references), not the value.
+2. Immutability is inherited.
+3. Immutability must be maintained when assigning to a new variable.
+
+## Function Arguments Mutability
+In Type-C, Function arguments are immutable by default.
+
+```tc
+fn addStructs(a: {x: u32}, b: {x: u32}) -> u32 {
+    a.x += b.x // Error
+    return a.x
+}
+```
+
+To make this work, you need to declare the argument as mutable.
+
+```tc
+fn addStructs(mut a: {x: u32}, b: {x: u32}) -> u32 {
+    a.x += b.x // Ok
+    return a.x
+}
+```
+
+If you dare and call this function with a `const` argument, you will get an error.
+
+```tc
+let const a = {x: 1}
+let b = {x: 2}
+let c = addStructs(a, b) // Error
+let d = addStructs(b, a) // Ok
+```
+
+## Class Attributes Mutability
+
+Class attributes can be declared as `const` to make them immutable. This immutability is disabled when the class is being initialized, i.e within the `init` function.
+
+```tc
+type Z = class {
+    let const a: {x: {y: u32}[]}
+
+    fn init(x: u32) {
+        this.a.x[0].y = x // Ok
+        let u = this.a.x  // Ok
+        u[0].y = 1        // Ok
+    }
+
+    fn doStuff () {
+        let u = this.a.x  // Error, attribute `a` is const
+        u[0].y = 1
+    }
+}
+```
+
+If you are desperate to mutate a `const` attribute, `mutate` keyword can be used.
+
+```tc
+let const z = {x: [{y: 1}]}
+let y = mutate z
+y.x[0].y = 2 // Ok
+
+// or
+
+(mutate y).x[0].y = 3 // Ok
+```
+
+## General Mutability Heads Up
+- Whenever you construct an expression using a `const` variable, the result is also `const`
+    - `a = [x, y, z]` the expression `[x, y, z]` is considered constant if any of `x`, `y`, or `z` is constant.
+    - `a = {x: x1, y: y1}` the expression `{x: x1, y: y1}` is considered constant if any of `x1` or `y1` is constant.
+- Variadic arguments are mutable only if the variant is mutable.
+- A class attribute mutability is also influenced by the instance mutability `OR(attribute is const, instance is const)`
+
+```tc
+
+fn main() {
+    let const z: {x: u32, y: u32} = {x: 1, y: 2}
+
+    let const y = {z: 1, ...z} // OK
+    let x = {z: 1, ...z} // Error
+}
+```
+
+## How to adapt to Type-C immutability
+Embrace them! Type-C immutability is designed to make your code safer and more predictable. It's a feature, not a bug. Use it to your advantage.
+Avoid `mutate` whenever you can, as it signifies:
+1. You are too lazy to refactor your code
+2. You have no idea what you are doing
+3. You are performing some optimizations and you really know what you are doing, in that case, you have my blessing.
