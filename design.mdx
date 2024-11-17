@@ -1,12 +1,11 @@
 # Type-C Design and Philosophy
 
-This section aims to showcase the key design goals and underlying philosophy that serve as the backbone of the language. 
-
+> It is my belief, that type-c is a like-it or leave-it language. While the project is in early development, the core of features and design choices will most remain the same.
 
 ## Interface Oriented Programming
-Modern programming has primarily leaned towards Object Oriented Programming (OOP), a paradigm that, while revolutionary, comes with its own set of drawbacks. Inheritance in OOP, for example, often results in rigid, 
+Modern programming has primarily leaned towards Object Oriented Programming (OOP), a paradigm that, while revolutionary, comes with its own set of drawbacks. Inheritance in OOP, for example, often results in rigid,
 tightly-coupled systems that become burdensome to extend or modify. Encapsulation, while safeguarding data, poses challenges concerning data ownership and leads to murky accessibility rules.
- Type-C addresses these issues by moving from an object-centric to a behavior-centric model. Behaviors are defined through interfaces, much like in Java, which helps to tackle some of the inherent limitations of traditional 
+ Type-C addresses these issues by moving from an object-centric to a behavior-centric model. Behaviors are defined through interfaces, much like in Java, which helps to tackle some of the inherent limitations of traditional
  OOP. Let's talk about the advantages of such a model:
 
 - **Enhanced Code Modularity:** Final classes provide a stable foundation for defining predictable and maintainable behaviors.
@@ -16,14 +15,15 @@ tightly-coupled systems that become burdensome to extend or modify. Encapsulatio
 - **Encouraging Composition:** Type-C promotes composition over inheritance. Rather than inheriting attributes and methods from a base class, developers can compose objects from multiple interfaces, resulting in a flexible, loosely-coupled code structure.
 - **Stateless Encapsulation:** Unlike traditional OOP, where encapsulation is often tied to the object's state, Type-C's interface-oriented paradigm encourages encapsulation through behavior. Interfaces define what actions can be performed but not how data is stored, reducing conflicts over data ownership and providing clearer accessibility rules, while still giving the developer the possibility to cast the interface to its actual class and modify the state if needed.
 
-In conclusion, while behavior-driven programming in Type-C does not profess to be a panacea for all programming challenges, it offers a robust alternative to traditional OOP paradigms. It brings about increased modularity, 
-contract-driven development, and a focus on behaviors, among other benefits. However, the power of Type-C comes with its own set of responsibilities. Best practices are still critical to harnessing its full potential, 
+In conclusion, while behavior-driven programming in Type-C does not fix all programming challenges, it offers a robust alternative to traditional OOP paradigms. It brings about increased modularity,
+contract-driven development, and a focus on behaviors, among other benefits. However, the power of Type-C comes with its own set of responsibilities. Best practices are still critical to harnessing its full potential,
 lest any misuse of its features turn into liabilities. Let's also review some the drawbacks of this model.
 
 - **Potential for Contract Violation:** While interfaces define contracts, they can't enforce them at runtime. Therefore, a class that poorly implements an interface can lead to unexpected behavior.
 - **Increased Initial Complexity:** The focus on defining behaviors through interfaces can increase the initial development time and may require a deeper understanding of the domain.
 - **Dependency on Good Design:** A poorly designed interface can be as problematic as a poorly designed class in OOP. Effective use of behavior-centric programming relies heavily on well-designed interfaces.
 - **Versioning Issues:** As with any contract, changes to an interface can break existing implementations, leading to versioning challenges.
+- **More Boilerplate Code:** Interfaces can lead to more boilerplate code, especially when multiple classes implement the same interface. This can increase the codebase's size and complexity. A solution to this is still being thought of.
 
 ### No User-defined Runtime Exceptions
 
@@ -51,7 +51,7 @@ match responseObject {
     success: ServerResponse.Success {
         io.print("Success! %s", success.json)
     }
-    
+
     error: ServerResponse.Error {
         io.print("Fail! %u", error.code)
     }
@@ -60,7 +60,7 @@ match responseObject {
 
 ## Mutability, Immutability and Pure Functions
 
-In Type-C, variables are mutable by default. However, the programmer can define an immutable entity through explicit declarations. 
+In Type-C, variables are mutable by default. However, the programmer can define an immutable entity through explicit declarations.
 Here's how you declare immutable and mutable variables and functions in Type-C:
 
 ```tc
@@ -76,7 +76,7 @@ class Rect {
 fn inherit(mut r: Rect) -> Rect {
     let r2 = r
     r2.x = 3
-    
+
     return r2
 }
 // inherit will compile successfully
@@ -84,7 +84,7 @@ fn inherit(mut r: Rect) -> Rect {
 fn inherit2(r: Rect) -> Rect {
     let r2 = r // <- Assigning an immutable object to a mutable object
     r.x = 3    // <- Changing the state of an immutable argument
-    
+
     return r2
 }
 // inherit2 will fail to compile due to the highlighted issues

@@ -97,28 +97,39 @@ Or
 ```sh
 npm install -g @unlimitedsoftwareworks/type-c
 ```
+You can now use the `typec` command in your terminal. Type `typec --help` for more information.
 
 Remember you need to have both `TYPE_V_PATH` and `TYPE_C_STDLIB` exported in your environment.
 
 ```sh
-type-c -c ./tests/test11 -o ./output --generate-ir --run
+typec -c ./tests/test11 -o ./output --generate-ir --run
 ```
 
 **Both `TYPE_V_PATH` and `TYPE_C_STDLIB` should point to directories**
 
 
 ## Creating a Project
+
+
+#### Use CLI:
+If you have installed the CLI, you can create a new project with the following command:
+```sh
+typec init [path]
+```
+This will create the folder if needed, and create a `module.json` and `main.tc` files in the folder.
+
+#### Manual:
 To create a new project, we will need to create a new folder, and create a `module.json` file. This file contains the project compiler settings, dependencies, search path, etc.
 ```json
 {
     "name": "Type-C Sample",
     "version": "1.0.0",
-    "author": "YOU",
+    "author": "Replace with your name",
     "dependencies": [],
     "description": "A type-c test case",
     "compiler": {
         "target": "runnable",
-        "entry": "test.tc"
+        "entry": "main.tc"
     }
 }
 ```
