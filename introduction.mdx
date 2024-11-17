@@ -1,12 +1,12 @@
 
 # Introduction
 
-Type-C is (or aims to be)a versatile and high-performance programming language tailored for performance-intensive applications, such as user interfaces, 
+Type-C is (or aims to be)a versatile and high-performance programming language tailored for performance-intensive applications, such as user interfaces,
 games, and web services, etc. While Type-C can be embedded in various applications as a scripting language or run on resource-constrained
- devices, its goal is to truly excels in scenarios where speed and efficiency are paramount. It is designed with a clear philosophy and specific goals, 
- which may resonate with some developers and not with others. The language draws inspiration from a variety of sources, including C, Java, and TypeScript. 
- TypeScript's powerful type inference engine, Java's structure, and C's straightforwardness have all played a role in shaping Type-C. The primary aim of 
- Type-C is to offer an enjoyable, expressive, and efficient programming experience. While it does not prioritize top-notch real-time performance or the 
+ devices, its goal is to truly excels in scenarios where speed and efficiency are paramount. It is designed with a clear philosophy and specific goals,
+ which may resonate with some developers and not with others. The language draws inspiration from a variety of sources, including C, Java, and TypeScript.
+ TypeScript's powerful type inference engine, Java's structure, and C's straightforwardness have all played a role in shaping Type-C. The primary aim of
+ Type-C is to offer an enjoyable, expressive, and efficient programming experience. While it does not prioritize top-notch real-time performance or the
  absolute simplicity of writing, it enforces specific design patterns that contribute to robust and maintainable enterprise-grade software (hopefully).
 
 
@@ -17,17 +17,18 @@ project is structured into a compiler written in TypeScript and a VM written in 
 Majority of the language features are already implemented, with some basic unit testing, But some features are still missing
 
 The missing features are:
-- [ ] Proper errors
+- [x] Proper errors
 - [ ] Modules
-- [ ] Struct/Array Destructuring `[1, 2, ...c]`
-- [ ] Closures
-- [ ] Coroutines
+- [x] Struct/Array Destructuring `[1, 2, ...c]`
+- [x] Closures
+- [x] Coroutines
 - [ ] Concurrency
 - [ ] IR optimizations
+- [ ] Proper unit tests
 
 ### VM Features
 It is hard to enumerate the features of the VM, so i will jump right away into the missing ones:
-- [ ] Templates (also need to be implemented in the compiler)
+- [x] Templates (also need to be implemented in the compiler)
 - [ ] Garbage Collector
 - [ ] Assembler
 - [ ] Disassembler

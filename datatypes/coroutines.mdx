@@ -1,8 +1,145 @@
-# Coroutines as Data Types
 
-Coroutines are built-in types and can be declared as follows:
+## What is a Coroutine?
+Coroutines allows you to model execution in terms of frames, every call to a coroutine executes a frame and returns the execution back to the caller.
+One common usage of coroutine is generators and iterators, where you feed in an array of elements for example; to a coroutine, and every call to the coroutine returns the next element in the array.
+
+tl;dr: **coroutine** is a special type of function that can pause its execution (`yield`) and be resumed later (`resume`). Unlike a typical function that runs from start to finish when called.
+
+In Type-C, coroutines are designed to yield control back to the caller when needed, allowing a smooth flow of data between producer and consumer functions.
+
+Coroutines are not a form of concurrency, but rather a way to manage cooperative multitasking. Coroutines execution are run in the parent thread.
+
+## Coroutine implementation in Type-C
+
+This part will be divided into two sections, the first section will tackle the design of coroutines within Type-C as a language and the second will delve into the VM
+implementation of coroutines.
+
+### Coroutine Design
+
+Coroutins in Type-C are heavily inspired by Lua. However, my goal is for Type-C to be deterministic and predictable, so I've made some changes to the design.
+First, any function that **yields**, is now considered to be a **Coroutine Callable Function**. Meaning you cannot these directly. To distinguish between such functions
+and regular functions, regular functions are annotated with `fn` keyword, while coroutine callable functions are annotated with `cfn` keyword.
+Coroutines always use latest arguments (unlike in Lua). If backup is needed, it should be done manually.
+
+You can still declare a function with `fn` keyword and if it contains a `yield`, the compiler will automatically convert it to a coroutine callable function.
 
 ```tc
-type CustomCoroutine = coroutine(fn(x: u32[]) -> u32)
+fn loop(x: u32[]) -> u32 {
+    yield x[0]
+    yield x[1]
+    yield x[2]
+}
+
+cfn loop2(x: u32[]) -> u32 {
+    yield x[0]
+    yield x[1]
+    yield x[2]
+}
 ```
 
+In this example, `loop` and `loop2` are identical.
+
+However, when dealing with anonymous functions, let's say an array of functions, there is an actual distinction between using `fn` and `cfn` keywords.
+
+```tc
+/**
+ * A function that yields!
+ */
+fn loop(x: u32[]) -> u32 {
+    yield x[0]
+    yield x[1]
+    yield x[2]
+}
+
+fn loop2(x: u32[]) -> u32 {
+    return x[0]
+}
+
+// WILL FAIL!
+let arr: (fn (x: u32[]) -> u32)[] = [loop, loop2]
+```
+This example will fail, because `loop` is of datatype `cfn(x: u32) -> u32` while `loop2` is of datatype `fn(x: u32) -> u32`.
+
+Other difference between Coroutine Callable Functions and Regular Functions is that Coroutine Callable Functions cannot return.
+Having a return within a `cfn` or mixing returns and yields will result in a compile-time error.
+
+Now to actual coroutine itself, `loop2` is simply a coroutine callable function. Think of it as a class if you will. And a class needs to be instianciated!
+
+```tc
+fn loop(x: u32[]) -> u32 {
+    yield x[0]
+    yield x[1]
+    yield x[2]
+}
+
+let co = coroutine loop
+```
+
+Now we can an instance of the coroutine, and we can call it as many times as it yields. Calling it more will result in a crash!
+
+```tc
+let x = co([1, 2, 3])
+let y = co([4, 5, 6])
+let z = co([7, 8, 9])
+
+let status = co.status
+```
+
+Now that we call the coroutine 3 times, we can check for its status.
+A coroutine can have the following status:
+- `created`: The coroutine is created and hasn't been called yet.
+- `running`: The coroutine is currently running.
+- `suspended`: The coroutine is suspended and can be resumed.
+- `dead`: The coroutine has finished execution.
+
+However, in our previous example, the `co.status` will result a status `suspended`. Because there is no way for it to recognize that it has reached its end.
+
+Here is why: A coroutine must always yield when called. It is up to the developer to decide when to stop the coroutine.
+Essentially there two options: Return a flag indicating the end of the coroutine, or use `yield!` to mark the coroutine as finished.
+
+```tc
+
+cfn loop(x: u32[]) -> (u32, bool) {
+    println("loop")
+    let i: u64 = 0
+
+    while i < x.length {
+        let j = i+1
+
+        if j == x.length {
+            yield! (x[i], true) // yield with a flag
+        } else {
+            yield (x[i], false)
+        }
+
+        i = j
+    }
+}
+```
+
+In our case, the coroutine will return a tuple of `(u32, bool)`. The `bool` flag will indicate if the coroutine has finished or not.
+it also uses `yield!` to indicate that the coroutine has finished.
+
+Since we are returning a flag, we can transform this to be come an infinite loop to iterate over the array as many times as we want.
+
+```tc
+cfn loop(x: u32[]) -> (u32, bool) {
+    println("loop")
+    let i: u64 = 0
+
+    while true {
+        let j = i+1
+
+        if j == x.length {
+            yield (x[i], true)
+
+            // reset the index
+            j = 0
+        } else {c
+            yield (x[i], false)
+        }
+
+        i = j
+    }
+}
+```

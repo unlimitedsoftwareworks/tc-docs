@@ -69,13 +69,13 @@ words. For example, `networkutils`.
 ## Keywords
 
 The following words are reserved keywords in Type-C and cannot be used
-as identifiers: `as`, `as?`, `as!`, `await`, `break`, `extern`, `this`,
-`class`, `continue`, `const`, `variant`, `do`, `else`, `extern`, `mut`,
-`enum`, `false`, `from`, `for`, `foreach`, `fn`, `if`, `import`, `in`,
-`is`, `interface`, `i8`, `i16`, `i32`, `i64`, `u8`, `u16`, `u32`, `u64`,
-`f32`, `f64`, `bool`, `void`, `char`, `thread`, `spawn`,
-`let`, `new`, `null`, `return`, `this`, `static`, `strict`, `struct`,
-`match`, `true`, `type`, `while`, `promise`.
+as identifiers: `as`, `as!`, `as?`, `break`, `cfn`, `class`, `const`, `continue`, `coroutine`,
+`do`, `else`, `enum`, `extern`, `false`, `fn`, `for`,
+`foreach`, `from`, `if`, `import`, `in`, `interface`,
+`is`, `let`, `match`, `mut`, `mutate`, `new`, `null`,
+`return`, `static`, `strict`, `struct`, `this`, `true`,
+`type`, `unreachable`, `variant`, `while`, `yield`, `yield!`.
+
 
 ## Punctuation
 
@@ -224,7 +224,7 @@ within the text. The available escape characters are:
 digit
 - `b"value"` - Byte string literal, array of `u8`
 
-Regular string literals are upcasted to standard String class, which supports utf8 encoding, 
+Regular string literals are upcasted to standard String class, which supports utf8 encoding,
 some times you need a C style string, meaning as a bytearray, hence you can use byte string literals `b"im just a u8[]"`.
 
 Numbers are divided into three categories: single-precision
@@ -287,7 +287,7 @@ dissected and discussed in the following sections.
 ## Importing Modules
 
 The first logical step in most programs is to import modules. Type-C
-does not provide support for folders as packages, meaning, you must always 
+does not provide support for folders as packages, meaning, you must always
 import from within a Type-C file. Unlike some other languages,
 you're only allowed to import modules at the beginning of your file;
 once you declare a variable, function, or type, you can no longer
@@ -409,11 +409,12 @@ Immutable variables are 'read-only', their state and the states of their compone
 
 ```tc
 type User = class {
-    let name: string
+    let const name: String
     let age: u32
 
-    fn init(name: string, age: u32) {
-        this += {name, age}
+    fn init(name: String, age: u32) {
+        this.name = name
+        this.age = age
     }
 
     fn setAge(newAge: u32) = this.age = age
@@ -433,7 +434,7 @@ be altered if `z` was to change. Immutability is enforced from the root object, 
 Functions in Type-C are defined using the `fn` keyword, followed by the function name and its parameters. Once declared, these functions are immutable, meaning they can't be reassigned.
 
 ```tc
-fn main(args: string[]) -> void {
+fn main(args: String[]) -> void {
     // do stuff
 }
 ```
@@ -480,5 +481,5 @@ fn apply(f: fn(f32, f32) -> u32, x, y) =
 
 let y = apply(multiply<f32>, f32(x), 0.13f)
 
-let z = multiply<string>("hello", "world") // <- compiler error!
+let z = multiply<String>("hello", "world") // <- compiler error!
 ```

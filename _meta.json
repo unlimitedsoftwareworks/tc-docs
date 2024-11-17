@@ -38,5 +38,5 @@
     { "name": "pattern-matching", "title": "Pattern Matching" },
     { "name": "inference-engine", "title": "Inference Engine" },
     { "name": "ffi", "title": "Foreign Function Interface" },
-    { "name": "coroutines", "title": "Coroutines" }
+    { "name": "limitations", "title": "Limitations" }
 ]

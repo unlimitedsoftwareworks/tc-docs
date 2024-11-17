@@ -1,4 +1,12 @@
 # Expressions
+
+
+
+<div role="alert" className="alert alert-warning">
+  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+  <span>This page is unfinished and not up-to-date</span>
+</div>
+
 Expressions form the building blocks of any Type-C program. They are fundamental constructs that evaluate to values, execute operations, or rarely, produce side effects. As you have seen in the previous sections, Type-C comes with a rich set of expression and aims to be a very expressive language, embracing functional constructs. Hence, in this chapter, we take a deep dive into the types of expressions in type-c.
 
 Every expression must return a value. That's why, when reviewing `if-else` and `match` expressions, we always had to provide an `else` branch.
@@ -7,7 +15,11 @@ Every expression must return a value. That's why, when reviewing `if-else` and `
 
 | Precedence | Operator              | Type                                   | Associativity | Overloadable |
 |------------|-----------------------|----------------------------------------|---------------|--------------|
-| 17         | `new`                 | Object creation                        | LTR           | No           |
+| 16         | `unreachable`         | Object creation                        | LTR           | No           |
+| 16         | `mutate`              | Object creation                        | LTR           | No           |
+| 16         | `coroutine`           | Object creation                        | LTR           | No           |
+| 16         | `yield`, `yield!`     | Object creation                        | LTR           | No           |
+| 16         | `new`                 | Object creation                        | LTR           | No           |
 | 16         | `spawn`               | Process spawning                       | LTR           | No           |
 | 16         | `await`               | Asynchronous wait                      | LTR           | No           |
 | 15         | `()`                  | Function call                          | LTR           | Yes          |
@@ -35,7 +47,7 @@ Every expression must return a value. That's why, when reviewing `if-else` and `
 | 9          | `>`                   | Relational greater than                | LTR           | Yes          |
 | 9          | `>=`                  | Relational greater than or equal       | LTR           | Yes          |
 | 9          | `is`                  | Type comparison (objects only)         | LTR           | No           |
-| 9          | `as`                  | Type casting                           | LTR           | No           |
+| 9          | `as`, `as?` `as!`     | Type casting                           | LTR           | No           |
 | 8          | `==`                  | Relational is equal to                 | LTR           | No           |
 | 8          | `!=`                  | Relational is not equal to             | LTR           | No           |
 | 7          | `&`                   | Bitwise AND                            | LTR           | Yes          |
@@ -64,14 +76,6 @@ This expression constructs a built-in array, syntax:
 
 When no type hint is provided, the type of the array is inferred from the types of the expressions. If the expressions have different types, the type of the array is the common type of the expressions. If there is no common type, the compiler will throw an error.
 
-
-### `await` Expression
-The `await` expression is used to wait for a promise to resolve. The syntax is as follows:
-
-```tc
-let r: T = await <expression>
-```
-where the expression being awaited is a `promise<T>`. await always return the type wrapped within the promise.
 
 ### Binary Expression
 Binary expressions are expressions that involve two operands and an operator. The operator can be any of the binary operators listed in the table above.
@@ -142,7 +146,7 @@ A class that overloads the `__index__` method can also use any datatype for inde
 When the compiler encounters an assignment to an array element, it will generate an `IndexSet` expression. This expression is used to set the value of an element in an array. The syntax is as follows:
 ```tc
 let x: u32[] = [1, 2, 3]
-x[0] = 4 
+x[0] = 4
 ```
 from a compiler perspective, `x[0] = 4` is translated to `IndexSet(target: x, value: 4, indexes: [0])`, the reason for this is that an indexing operation can have multiple indexes in theory:
 
@@ -173,7 +177,10 @@ Here are the acceptable cases:
 3. `interface` is `interface`
 4. `Variant` is `Variant Constructor`
 
+### Casting Expression
+Avoid using `as!`. It just ignores safety checks.
 
+To safery cast between interfaces/classes, you can use `as?` which returns a nullable if casting fails, or `as` if the cast is guaranteed to succeed.
 
 ### Lambda Expressions and Clojures
 
@@ -283,7 +290,7 @@ Member access is not limited to classes, as it is also used for getting the fiel
 
 ```ts
 type Error = variant {
-    Ok(code: u32), 
+    Ok(code: u32),
     Err(message: String)
 }
 
@@ -358,7 +365,7 @@ let res: promise<u32> = spawn fib(100)
 The `this` expression is used to access the current object's fields and methods. Hence it is only valid within a class.
 
 ### Unary Expression:
-Unary expressions are expressions that involve a single operand and an operator. 
+Unary expressions are expressions that involve a single operand and an operator.
 
 ### Unnamed Struct Expression
 This expression is used to create structs with unnamed fields. Notice that such expression requires a type hint, since the compiler can't infer the type of the struct. The syntax is as follows:
@@ -389,10 +396,10 @@ In this example, the variable x is assigned the result of the do block, where th
 
 Purpose and Clarity
 
-By using do expressions, you encapsulate a sequence of computations in a clear, self-contained block, making the intent of your code more obvious. 
+By using do expressions, you encapsulate a sequence of computations in a clear, self-contained block, making the intent of your code more obvious.
 Instead of having to analyze line-by-line to infer the purpose of intermediate steps, the do keyword immediately signals that the block is intended
  to produce a final result.
-This approach promotes cleaner, more readable code, particularly in cases where complex logic or multiple statements are needed to compute a value. 
+This approach promotes cleaner, more readable code, particularly in cases where complex logic or multiple statements are needed to compute a value.
 The do expression helps to separate the “how” of the computation from the “what” of the result, improving both intent and structure.
 
 #### Example Usage:
@@ -412,19 +419,19 @@ let b: f64 = 2.71;
 let result = a * b + 1;
 println("Result = " + result);
 ```
-Variables declared within the do block are not visible outside of it. This helps to avoid variable name clashes and to make the code more readable. 
+Variables declared within the do block are not visible outside of it. This helps to avoid variable name clashes and to make the code more readable.
 Each do block has its own local scope, ensuring that the intermediate variables used in computations don’t interfere with the surrounding code.
 
-This approach promotes cleaner, more readable code, particularly in cases where complex logic or multiple statements are needed to compute a value. 
+This approach promotes cleaner, more readable code, particularly in cases where complex logic or multiple statements are needed to compute a value.
 The do expression helps to separate the “how” of the computation from the “what” of the result, improving both intent and structure.
 
-On top of that, this can potentially be optimized by the compiler, since the entire block can be treated as a single expression, and the compiler 
+On top of that, this can potentially be optimized by the compiler, since the entire block can be treated as a single expression, and the compiler
 can optimize the code accordingly.
 
-### Potential Pitfalls
+#### Potential Pitfalls
 Returns within a do expression must be returned with the `return` keyword. Meaning if you are
 within a do expression within a function, you cannot return from the function by returning from
-the do expression. 
+the do expression.
 
 ```tc
 fn example() -> u32 {
@@ -433,3 +440,16 @@ fn example() -> u32 {
         return x // applies only to the do expression block
     } + 1
 }
+
+
+### Coroutine Expression
+
+```tc
+fn loop(x: u32[]) -> u32 {
+    yield x[0]
+    yield x[1]
+    yield x[2]
+}
+
+let co = coroutine loop
+```

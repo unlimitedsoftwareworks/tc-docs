@@ -1,0 +1,10 @@
+Type-C Limitations
+===
+
+Despite all of these features, types-c does offer some limitations that are important to be aware of.
+Some of these limitations will be improved in the near future, some will not.
+
+- Maximum number of arguments to a function is 256
+- Maximum number of class attributes is 256
+- Maximum number of struct fields is 256
+- No spilling at runtime, failure to allocate registers will result in a compile-time error, with error `Function too complex`.
