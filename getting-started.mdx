@@ -7,13 +7,6 @@
 
 ## Installation
 
-Type-C setup currently involves manual work as the the language has not been officially release yet.
-Hence, we will need to manually install the following:
-- Type-C Compiler: A typescript project, requires node & npm
-- Type-V: Type-C Virtual Machine, built in C11 requires GCC/Clang, CMake
-- Standard Library: Type-C stdlib lib, no requirements.
-
-
 ### 1. Install Type-V
 
 #### Prerequisite:
@@ -69,47 +62,40 @@ Export the path to the `type-v` folder as `TYPE_V_PATH` in your environment.
 export TYPE_V_PATH=/path/to/type-v/build
 ```
 
-### 2. Install stdlib
-
-```sh
-git clone https://github.com/unlimitedsoftwareworks/stdlib
-```
-
-Export the path to the `stdlib` folder as `TYPE_C_STDLIB` in your environment.
-
-```sh
-export TYPE_C_STDLIB=/path/to/type-c/stdlib
-```
-
-### 3: Install Type-C
-
-Either clone this repo
-```sh
-git clone https://github.com/unlimitedsoftwareworks/type-c
-yarn
-yarn build
-```
-
-with `dist/index.js` being the entry point for the CLI
-
-Or
+### 2: Install Type-C
 
 ```sh
 npm install -g @unlimitedsoftwareworks/type-c
 ```
 You can now use the `typec` command in your terminal. Type `typec --help` for more information.
 
-Remember you need to have both `TYPE_V_PATH` and `TYPE_C_STDLIB` exported in your environment.
+```bash
+Type-c compiler, version ${compilerVersion}.
+Usage: type-c <command> [options]
+        --run-tests             Run all unit test
+        --compile <dir>         Compile a directory
+        --no-generate-binaries  Do not generate binaries
+        --output <dir>          Output folder
+        --run                   Run the generated output
+        --generate-ir           Generate IR and DOT files
+        --no-warnings           Do not show warnings
+        init <folder>           Initialize a new project at the given folder
+        stdlib install          Install the standard library from git
+        stdlib update           Updates the standard library from git
+        stdlib where            Prints the path to the standard library
+```
+
+When you run `typec init <folder>` it will automatically check for updates for the standard library and create a new project in the
+folder with a `module.json` file and a `main.tc` file.
+
+Remember you need to have both `TYPE_V_PATH` exported in your environment.
 
 ```sh
+export TYPE_V_PATH=/path/to/type-v/build
 typec -c ./tests/test11 -o ./output --generate-ir --run
 ```
 
-**Both `TYPE_V_PATH` and `TYPE_C_STDLIB` should point to directories**
-
-
 ## Creating a Project
-
 
 #### Use CLI:
 If you have installed the CLI, you can create a new project with the following command:
