@@ -1,0 +1,16 @@
+# FAQ
+
+## Is Type-C Object Oriented?
+Type-C’s approach doesn’t entirely fit into the traditional OOP model, though it incorporates some object-oriented elements, such as the use of interfaces and classes. Let's break this down:
+
+#### How Type-C Differs from Traditional OOP
+**Composition Over Inheritance:** In traditional OOP, inheritance is a central concept for code reuse, establishing hierarchical relationships. Type-C, however, emphasizes composition over inheritance, which makes it more flexible and modular.
+Type-C leverages implementations (impl) that are parameterized and reused across multiple classes, unlike the rigid inheritance tree found in classical OOP.
+
+**Decoupling State and Behavior:** In OOP, a base class owns both state (attributes) and behavior (methods), and subclasses inherit these properties directly. Type-C decouples state and behavior by having classes own the state, while implementations provide the behavior. This separation is less typical in traditional OOP.
+**Interfaces with Behavioral Composition:** Interfaces in Type-C are used to define a contract, which is familiar in OOP, but instead of having a fixed class hierarchy, Type-C allows implementations to fulfill the behavior flexibly. This modular composition shifts Type-C away from the classical OOP paradigm of building elaborate inheritance trees.
+#### Is Type-C Object-Oriented?
+
+Yes and No. Type-C contains object-oriented principles—such as encapsulation, use of interfaces, and classes—but it fundamentally diverges from inheritance-based OOP by emphasizing composition and flexibility.
+Instead of following a traditional hierarchical model, Type-C uses flat, modular behaviors that can be mixed and matched, which places it closer to composition-focused paradigms like Entity Component System (ECS).
+So, while Type-C has OOP characteristics, it doesn't strictly follow the OOP paradigm; it incorporates object-oriented elements with a stronger emphasis on modular composition, making it more akin to compositional programming.

@@ -20,6 +20,7 @@
             { "name": "functions", "title": "Function Type" },
             { "name": "interfaces", "title": "Interfaces" },
             { "name": "joins", "title": "Joins" },
+            { "name": "implementations", "title": "Implementations" },
             { "name": "classes", "title": "Classes" },
             { "name": "nullables", "title": "Nullables" },
             { "name": "tuples", "title": "Tuples" },
@@ -38,5 +39,6 @@
     { "name": "pattern-matching", "title": "Pattern Matching" },
     { "name": "inference-engine", "title": "Inference Engine" },
     { "name": "ffi", "title": "Foreign Function Interface" },
+    { "name": "faq", "title": "FAQ" },
     { "name": "limitations", "title": "Limitations" }
 ]

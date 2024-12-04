@@ -13,7 +13,7 @@ type Person = class {
     }
 
     fn sayHello() {
-        io.print("Hello, my name is {} and I am {} years old.", name, age)
+        println("Hello, my name is {} and I am {} years old.", name, age)
     }
 }
 ```
@@ -81,7 +81,7 @@ type Person = class Serializable, Deserializable<Person> {
 When defining classes, it is import to declare attributes prior to methods. Once a method declaration has been found, the compiler will expect only methods afterwards. This is design choice is made to standardize the way classes are defined.
 
 ## Classes and Method Overloading
-Method overloading is only allowed within classes and interfaces. A method signature is what identifies a method, and it is composed of the method name and the types of its parameters. Hence, two methods with the same name but different parameter types are considered overloaded. Return type within the signature is not considered, hence if two methods have the same name and parameter types but different return types, they are considered duplicates and will cause a compilation error.
+Method overloading is allowed within classes and interfaces. A method signature is what identifies a method, and it is composed of the method name and the types of its parameters. Hence, two methods with the same name but different parameter types are considered overloaded. Return type within the signature is not considered, hence if two methods have the same name and parameter types but different return types, they are considered duplicates and will cause a compilation error.
 
 ```tc
 type Array<T> = class {
@@ -98,7 +98,8 @@ type Array<T> = class {
 ```
 
 ## Classes and Inheritance
-It is better to think of classes as concrete behaviors rather than a hierarchy of types. Classes implement interface, which are merely protocols for behavior. This is a subtle but important distinction.
+It is better to think of classes as concrete behaviors rather than a hierarchy of types.
+Classes implement interface, which are merely protocols for behavior. This is a subtle but important distinction.
 
 ## Rules
 - Class names must start with a capital letter.
@@ -107,7 +108,9 @@ It is better to think of classes as concrete behaviors rather than a hierarchy o
 - Classes can have multiple constructors
 - Classes can have static methods
 - Classes can have static attributes
+- Classes can have implementations
 - Classes' static methods cannot use the class generic type
+- Classes' attributes cannot be generic
 - Classes can extend generic interfaces.
 - Classes constructor must return void, they are only meant to initialize the state of the object.
 
@@ -116,7 +119,7 @@ It is better to think of classes as concrete behaviors rather than a hierarchy o
 Suppose we have the following data types:
 
 ```tc
-type X = class {
+type X<T> = class {
     fn get<T>(x: T) -> T {
         return x
     }
@@ -134,7 +137,7 @@ type X = class {
     }
 }
 
-let z: interface {fn get(x: u32) -> u32} = new X()
+let z: interface {fn get(x: u32) -> u32} = new X() // Woupsy
 ```
 
 Will fail since the given type argument does not satisfy the constraints of the generic class.

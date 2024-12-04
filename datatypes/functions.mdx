@@ -33,10 +33,10 @@ let y = apply(fn(x: u32) -> u32 = x * x - x, [1, 2, 3, 4])
 The snippet defines a custom function type, `FunctionType`, designed for functions that accept a `ServerResponse` and return `void`. This custom type enhances code readability by making explicit the expected function signature. The example also demonstrates a higher-order function, `apply`, which takes a function `f` and an array `arr`, and returns a new array obtained by applying `f` to each element of `arr`. This showcases how function types can simplify the manipulation and use of functions as data.
 
 ## Argument Mutability
-When it comes to type compatibility between function types, not only arguments types must be compatible, 
+When it comes to type compatibility between function types, not only arguments types must be compatible,
 but also their mutability must be compatible. For example, a function that takes a mutable argument cannot
- be assigned to a variable of type function that takes an immutable argument. However, the opposite is 
- possible, a function that takes an immutable argument can be assigned to a variable of type function 
+ be assigned to a variable of type function that takes an immutable argument. However, the opposite is
+ possible, a function that takes an immutable argument can be assigned to a variable of type function
  that takes a mutable argument. This is to ensure that the expected mutability of the argument is preserved.
 
 ```tc
@@ -45,4 +45,24 @@ let f2: fn(mut x: u32) -> u32 = x = x + 1
 
 let f3: fn(mut x: u32) -> u32 = f1 // Error
 let f4: fn(x: u32) -> u32 = f2 // Error
+```
+
+## Function Overloading
+It is possible to overload functions, with some limitations.
+
+1. Functions must have different argument types. Return types does not count towards the signature
+2. Overloaded functions must be within the same scope
+
+```tc
+// from std.math
+
+from std.vm_api.stdmath import MathAPI
+
+fn abs(x: f64) -> f64 {
+    return MathAPI.absd(x)
+}
+
+fn abs (x: f32) -> f32 {
+    return MathAPI.absf(x)
+}
 ```

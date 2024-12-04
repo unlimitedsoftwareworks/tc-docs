@@ -1,44 +1,72 @@
 Basic DataTypes
 ===
 
-Like any regular programming language, Type-C provides basic built-in
-data types. These types have a guaranteed fixed size, ensuring that the
-data they represent occupies a constant amount of memory, regardless of
-the platform. This is crucial for low-level operations and provides more
-predictable behavior for high-performance computing tasks.
+Like any regular programming language, Type-C provides basic built-in data types. These types have a guaranteed fixed size, ensuring that the data they represent occupies a constant amount of memory, regardless of the platform. This is crucial for low-level operations and provides more predictable behavior for high-performance computing tasks.
 
+## Overview of Basic Data Types
 
-|**Name** |**Explanation**| **Range**|
-|---------|---------------------------------------------------------------------------|----------|
-|`u8`| 8bit wide unsigned integer|0 to 255|
-|`i8`|8-bit wide signed integer|-128 to 127|
-|`u16`|16-bit wide unsigned integer|0 to 65,535|
-|`i16`|16-bit wide signed integer|                                              -32,768 to 32,767|
-|`u32`|32-bit wide unsigned integer  |0 to 4,294,967,295|
-|`i32`|32-bit wide signed integer|                                            -2,147,483,648 to 2,147,483,647|
-|`u64`|64-bit wide unsigned integer|                                              0 to 18,446,744,073,709,551,615|
-|`i64`|64-bit wide signed integer|-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807|
-|`f32`|32-bit wide floating  number|                                           3.4 × 10^38 (7 digits)|
-|`f64`|64-bit wide floating point number |1.7 × 10^308 (15 digits)|
-|`bool`|Boolean value (8-bit sized)      |`true` or `false`|
-|`void`|Usually a return type for functions that has no return value| |
-|`null`|Used both as a type and a value, to indicate that an object is nullable||
+| **Name** | **Explanation** | **Range** |
+|----------|-----------------|-----------|
+| `u8`     | 8-bit wide unsigned integer | 0 to 255 |
+| `i8`     | 8-bit wide signed integer   | -128 to 127 |
+| `u16`    | 16-bit wide unsigned integer | 0 to 65,535 |
+| `i16`    | 16-bit wide signed integer   | -32,768 to 32,767 |
+| `u32`    | 32-bit wide unsigned integer | 0 to 4,294,967,295 |
+| `i32`    | 32-bit wide signed integer   | -2,147,483,648 to 2,147,483,647 |
+| `u64`    | 64-bit wide unsigned integer | 0 to 18,446,744,073,709,551,615 |
+| `i64`    | 64-bit wide signed integer   | -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 |
+| `f32`    | 32-bit wide floating point number | 3.4 × 10^38 (7 digits) |
+| `f64`    | 64-bit wide floating point number | 1.7 × 10^308 (15 digits) |
+| `bool`   | Boolean value (8-bit sized)  | `true` or `false` |
+| `void`   | Usually a return type for functions that have no return value | |
+| `null`   | Used both as a type and a value, to indicate that an object is nullable | |
 
-Type-C does not provide C compatibility types for basic types, instead, `u8` is compatible with C99 
-`uint8_t`, same for all others.
+Type-C does not provide C compatibility types for basic types. Instead, `u8` is compatible with C99 `uint8_t`, and similarly for all other types.
 
-## Type Casting between basic types
-Type casting in not an instant instruction, inorder to attempt to maintain type safety, Type-C will 
-cast an intermediate type to the target type. This is to prevent loss of data or unexpected results, 
-when applicable.
+## Type Casting Between Basic Types
+
+Type casting is not an instantaneous operation. In order to maintain type safety, Type-C casts an intermediate type to the target type, when necessary. This is to prevent loss of data or unexpected results, when applicable.
 
 For example:
+
 ```tc
-let x: f32 = 1f
-let z: u8 = x as u8
+let x: f32 = 1f;
+let z: u8 = x as u8;
 ```
 
-In the above example, `x` is a floating point number, and `z` is an unsigned integer. The compiler will first
-convert x into u32, then to u8.
+In the above example, `x` is a floating point number, and `z` is an unsigned integer. The compiler will first convert `x` into `u32`, then to `u8`.
 
+## Additional Notes on Basic Data Types
 
+- **Boolean Type (`bool`)**: The `bool` type is used to represent logical values. It is primarily used in conditional statements and control flow to represent true or false values. The `bool` type is stored in 8 bits.
+
+- **Floating Point Types (`f32` and `f64`)**: Floating point types are used to represent real numbers, and they follow the IEEE 754 standard for floating point arithmetic. The `f32` type provides 7 digits of precision, while the `f64` type provides 15 digits of precision. These types are useful for scientific calculations where precision is important.
+
+- **Integer Types (`u8`, `i8`, `u16`, `i16`, `u32`, `i32`, `u64`, `i64`)**: Unsigned types (`u*`) are used for non-negative values, while signed types (`i*`) can represent both positive and negative values. The choice between different integer sizes depends on the range of values required by the application and the memory constraints.
+
+- **Void Type (`void`)**: The `void` type is used to specify that a function does not return a value. It is commonly used for functions that perform actions but do not produce a result.
+
+- **Null Type (`null`)**: The `null` type is used to indicate the absence of a value or that a reference is not pointing to any object. It is often used to denote uninitialized or optional values.
+
+## Implicit and Explicit Casting
+
+- **Implicit Casting**: Type-C minimizes implicit casting to prevent unintended data loss. For example, assigning an `i32` value to an `i8` variable will require explicit casting to ensure that the developer is aware of potential data truncation.
+
+- **Explicit Casting**: Explicit casting can be performed using the `as` keyword. The casting process involves converting to an intermediate type if necessary, ensuring that data integrity is maintained.
+
+### Example of Explicit Casting
+
+```tc
+let a: i32 = 500;
+let b: i8 = a as i8;  // Explicit casting required due to potential data loss
+```
+
+In this example, the value of `a` is explicitly cast to an `i8` type. Since `i8` has a smaller range, there is a risk of overflow, and explicit casting makes the developer aware of this possibility.
+
+## Best Practices
+
+- **Choose the Smallest Suitable Data Type**: When designing your application, choose the smallest data type that can accommodate the range of values required. This helps reduce memory usage and can improve performance.
+
+- **Avoid Unnecessary Casting**: To maintain code readability and minimize bugs, avoid unnecessary type casting unless it is explicitly needed for the logic of the application.
+
+- **Be Mindful of Overflow and Underflow**: When using integer types, be aware of the risk of overflow and underflow, especially when performing arithmetic operations. Consider using a larger type if the result might exceed the limits of the current type.

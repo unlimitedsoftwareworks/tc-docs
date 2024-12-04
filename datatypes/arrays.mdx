@@ -1,35 +1,91 @@
 # Arrays
 
-Types-C comes with built-in arrays types. This type is a primitive type and not to be confused with standard library `Array` type.
+Type-C includes built-in array types as a core feature. This primitive array type is distinct from the standard library's `Array` type.
 
-Similar to Java's arrays, Type-C arrays have fixed size and zero-based indexing. Arrays are declared using the `[]` syntax, and can be initialized using the `array` keyword.
+Similar to Java arrays, Type-C arrays:
+
+- Have a **fixed size**.
+- Use **zero-based indexing**.
+- Are declared using the `[]` syntax.
+- Can be initialized using the `[]` literal or the `array` keyword.
+
+## Declaration and Initialization
+
+You can declare and initialize arrays like this:
 
 ```tc
 let arr: u32[] = [1, 2, 3]
 ```
 
-Arrays can be indexed using the `[]` operator, and their length can be obtained using the `length` property.
+## Accessing Elements and Properties
+
+You can access elements and retrieve the length of an array:
 
 ```tc
 let arr: u32[] = [1, 2, 3]
-let x = arr[0] // x = 1
-let y = arr.length // y = 3
+let x = arr[0]      // x = 1
+let y = arr.length  // y = 3
 ```
 
-## Array operations:
-Arrays can be indexed, extended or sliced, here the full list of operations:
+## Array Operations
+
+Type-C arrays support a range of operations, including indexing, slicing, and resizing. Here’s a summary:
+
+### Examples
 
 ```tc
 let arr: u32[] = [1, 2, 3]
-let x = arr[0] // x = 1
-let y = arr.length // y = 3
-arr[1] = 5 // arr = [1, 5, 3]
-let z = arr.slice(0, 1)
-z.extend(5)
+
+let x = arr[0]            // Access the first element, x = 1
+let y = arr.length        // Get the length, y = 3
+arr[1] = 5                // Modify the second element, arr = [1, 5, 3]
+arr[-1] = 5                // Modify the last element, arr = [1, 5, 5]
+
+let z = arr.slice(0, 1)   // Slice the array, z = [1]
+z.extend(5)               // Extend the slice's size to 5
 ```
 
-- **Indexing**: `arr[i]`, `i` must be of type `u64`, returns the element at index `i`
-- **Index set**: `arr[i] = x`, `i` must be of type `u64`, sets the element at index `i` to `x` and returns it.
-- **Length**: `arr.length`, returns `u64`.
-- **Slice**: `arr.slice(start, end)`, `start` and `end` must be of type `u64`.
-- **Extend**: `arr.extend(x)`, `x` must be of type `u64`, sets the size of the array to `x`. Returns `void`.
+### Supported Operations
+
+- **Indexing**: Access elements by their index.
+  - Syntax: `arr[i]`
+  - Constraints: `i` must be of type `u64`.
+  - Behavior: Returns the element at index `i`.
+
+- **Reverse Indexing**: Access elements using negative indices.
+  - Syntax: `arr[-i]`
+  - Constraints: `i` must be of type `u64`.
+  - Behavior: Returns the element at index `arr.length - i`.
+
+- **Index Assignment**: Modify elements by their index.
+  - Syntax: `arr[i] = x`
+  - Constraints: `i` must be of type `u64`.
+  - Behavior: Sets the element at index `i` to `x` and returns `x`.
+
+- **Reverse Index Assignment**: Modify elements using negative indices.
+  - Syntax: `arr[-i] = x`
+  - Constraints: `i` must be of type `u64`.
+  - Behavior: Sets the element at index `arr.length - i` to `x` and returns `x`.
+
+- **Length**: Retrieve the array's length.
+  - Syntax: `arr.length`
+  - Behavior: Returns the array length as a `u64`.
+
+- **Slicing**: Extract a subarray.
+  - Syntax: `arr.slice(start, end)`
+  - Constraints: `start` and `end` must be of type `u64`.
+  - Behavior: Returns a new array containing elements from `start` (inclusive) to `end` (exclusive).
+
+- **Extend**: Increase the array's size.
+  - Syntax: `arr.extend(x)`
+  - Constraints: `x` must be of type `u64`.
+  - Behavior: Resizes the array to `x` elements. Returns `void`.
+
+---
+
+### Notes
+
+- **Fixed Size**: Arrays does not automatically grow or shrink. Use `extend` to resize them (this reallocates memory).
+- **Index Bounds**: Accessing indices out of bounds will result in an error.
+- **Unset Values**: Uninitialized array elements are set to zero.
+- **Immutable Slicing**: Slicing produces a copy of the selected range.

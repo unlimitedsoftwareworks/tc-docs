@@ -1,7 +1,5 @@
 # Expressions
 
-
-
 <div role="alert" className="alert alert-warning">
   <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
   <span>This page is unfinished and not up-to-date</span>
@@ -139,7 +137,7 @@ let x: u32[] = [1, 2, 3]
 let y: u32 = x[0]
 ```
 
-A class that overloads the `__index__` method can also use any datatype for indexing, even strings and such.
+A class that overloads the `[]` method can also use any datatype for indexing, even strings and such.
 
 ### IndexSet Expression
 
@@ -157,7 +155,7 @@ x[0, 1] = 4 // fail! only one index is allowed
 
 type MyArray = class {
     // ...
-    fn __index_set__(value: u32, index1: u32, index2: u32) {
+    fn []=(value: u32, index1: u32, index2: u32) {
         // ...
     }
 }
@@ -167,6 +165,31 @@ x[0, 1] = 4 // success! the class MyArray has an __index_set__ method with multi
 ```
 
 So the built-in array type only allows one index, but a custom class can allow multiple indexes.
+
+### Reverse Index Access Expression
+Reverse index access allows the access of elements from the end of an array. The syntax is as follows:
+```tc
+let a = [1, 2, 3, 4]
+let z = a[-1] // 4
+```
+
+It is important to note that unary minus is used to denote reverse indexing, and is part of the operator!
+
+`a[-1]` translates to: `reverse_index(a, 1)`, where `1` is still a `u64`.
+
+To overload this operator within a method, you use the name `[-]`
+
+### Reverse Index Set Expression
+Reverse index set allows the setting of elements from the end of an array. The syntax is very similar to index set:
+```tc
+let a = [1, 2, 3, 4]
+a[-1] = 0
+```
+
+Same logic as Reverse Index Access Expression applies here, the `-` is part of the operator.
+
+To overload this operator within a method, you use the name `[-]=`
+
 
 ### Instance Check Expression
 This expression is similar to `instanceof` in other languages. However in type-c, the keyword `is` is chosen since it is not just about classes and interfaces, but also variants. Also remember that Type-C matches types by structure and not names. So instead of thinking "is this object an instance of this class", think "does this data match with that".
@@ -382,7 +405,7 @@ let x: MyStruct = { 10, "John" }
 When creating an unnamed struct, the order of the fields must match the order of the fields in the struct definition. Also, the fields must be comma-separated.
 
 
-## Do Expressions
+### Do Expressions
 
 **Do expressions** provide a clear and concise way to execute a block of code and return a value. Unlike standard blocks, which are used for grouping statements, `do` expressions evaluate the block as an expression and return a result. The syntax is as follows:
 
@@ -452,4 +475,34 @@ fn loop(x: u32[]) -> u32 {
 }
 
 let co = coroutine loop
+```
+
+### Unreachable Expression
+`unreachable` is a keyword and expression, you can use it in part of your code to denote that the code should never be reached.
+The use of `unreachable` is circumstantial, but as in type-c, all expression requires a return value, hence, in cases where you are
+sure that; say you have covered all possible cases in a match expression, you can use `unreachable` to denote that the code should never be reached.
+
+```tc
+// notice i32 here
+fn fib(n: i32) = match n {
+    0 => 0,
+    1 => 1,
+    x if x > 0 => fib(n - 1) + fib(n - 2),
+    _ => unreachable
+}
+```
+
+
+Under the hood, `unreachable` has a special data type associated with it, that matches with any existing type.
+
+### Mutate Expression
+`mutate` allows you to create a copy of a constant value, but with a different name.
+The usage of mutate is considered an escape hatch, and should be used with caution.
+
+```tc
+let const vec = {x: 1, y: -1, z: 0}
+let mutatedVec = mutate vec
+vec.x = 10
+
+(mutate vec).x = 30
 ```

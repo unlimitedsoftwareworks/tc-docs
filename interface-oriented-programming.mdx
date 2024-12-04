@@ -1,4 +1,252 @@
-Interface Oriented programming
-===
+---
+title: "Type-C Implementations vs Traditional OOP Class Inheritance"
+description: "A comparison of Type-C's approach to behavior composition against traditional OOP class inheritance, including examples, pros, and cons."
+---
 
-TODO
+# Comparison: Type-C Implementations vs Traditional OOP Class Inheritance
+
+The progression from **interfaces to implementations to classes** in Type-C represents a significant evolution from traditional **object-oriented programming (OOP)** approaches based on **class inheritance**. Let’s compare these two paradigms, exploring examples, advantages, and disadvantages of each, to understand how Type-C’s modular approach provides a fresh perspective.
+
+## Traditional OOP with Class Inheritance
+
+In traditional OOP, the primary mechanism for code reuse is **class inheritance**. Inheritance allows classes to derive from a base class, gaining its methods and properties. This promotes code reuse by extending an existing class to add or modify behavior.
+
+### Example: Traditional Class Inheritance
+
+Imagine we are modeling different types of 3D objects, like a generic `Object3D` and a specific `StaticMesh` object:
+
+```java
+// Base class providing 3D transformation methods
+class Object3D {
+    Vec3 position;
+    Vec3 rotation;
+    Vec3 scale;
+
+    public Object3D() {
+        this.position = new Vec3(0, 0, 0);
+        this.rotation = new Vec3(0, 0, 0);
+        this.scale = new Vec3(1, 1, 1);
+    }
+
+    public void setPosition(Vec3 position) {
+        this.position = position;
+    }
+
+    public Vec3 getPosition() {
+        return position;
+    }
+
+    // Other methods like getRotation, setRotation, etc.
+}
+
+// Derived class inheriting from Object3D
+class StaticMesh extends Object3D {
+    Mesh mesh;
+
+    public StaticMesh(Mesh mesh) {
+        super();
+        this.mesh = mesh;
+    }
+
+    public void render() {
+        // Render the mesh
+        System.out.println("Rendering StaticMesh");
+    }
+}
+```
+
+In this example, `StaticMesh` **inherits** from `Object3D`, meaning it automatically gains the fields (`position`, `rotation`, `scale`) and methods (`setPosition`, `getPosition`, etc.) defined in `Object3D`. This is useful for code reuse, as common behaviors are centralized in a base class.
+
+### Advantages of Class Inheritance
+
+1. **Code Reuse**: Common behavior can be defined in a base class and inherited by derived classes, promoting reuse.
+2. **Polymorphism**: Inheritance allows for polymorphism, meaning that a base class reference can point to any derived class object, making the code more flexible.
+3. **Simpler Relationship**: Inheritance defines a clear "is-a" relationship, which can make understanding the class hierarchy straightforward.
+
+### Disadvantages of Class Inheritance
+
+1. **Rigid Hierarchies**: Inheritance structures are often **rigid** and can lead to deep, complex hierarchies. If changes are needed at the base level, they can have unintended ripple effects on all derived classes.
+2. **Fragile Base Class Problem**: Modifying a base class can inadvertently break derived classes, making maintenance risky.
+3. **Code Duplication for Different Hierarchies**: Inheritance doesn’t work well when similar functionality is needed in different branches of a hierarchy, leading to **code duplication**.
+4. **Limited Reuse**: Inheritance tightly couples derived classes to their base classes, making it difficult to **reuse behavior** in contexts that don’t fit neatly into the class hierarchy.
+
+## Type-C Approach with Interfaces, Implementations, and Classes
+
+In Type-C, behavior is composed using **interfaces**, **implementations (`impl`)**, and **classes**. This provides a more **modular** and **flexible** approach compared to rigid inheritance.
+
+### Example: Type-C Interface, Implementation, and Class
+
+Consider the same scenario of modeling 3D objects, but using Type-C's approach:
+
+```tc
+type Object3D = interface {
+    fn getPosition() -> Vec3
+    fn setPosition(pos: Vec3) -> void
+    fn getRotation() -> Vec3
+    fn setRotation(rot: Vec3) -> void
+    fn getScale() -> Vec3
+    fn setScale(scale: Vec3) -> void
+}
+
+type Default3DPropsImpl = impl (
+    position: Vec3,
+    rotation: Vec3,
+    scale: Vec3
+) {
+    fn getPosition() -> Vec3 = this.position
+    fn setPosition(pos: Vec3) -> void { this.position = pos }
+
+    fn getRotation() -> Vec3 = this.rotation
+    fn setRotation(rot: Vec3) -> void { this.rotation = rot }
+
+    fn getScale() -> Vec3 = this.scale
+    fn setScale(scale: Vec3) -> void { this.scale = scale }
+}
+
+type StaticMesh = class Object3D {
+    let position: Vec3
+    let rotation: Vec3
+    let scale: Vec3
+    let mesh: Mesh
+
+    impl Default3DPropsImpl(position, rotation, scale)
+
+    fn init(mesh: Mesh, position: Vec3, rotation: Vec3, scale: Vec3) {
+        this += {position, rotation, scale, mesh}
+    }
+
+    fn render() -> void {
+        println("Rendering StaticMesh")
+    }
+}
+```
+
+### Advantages of Type-C Approach
+
+1. **Greater Flexibility**:
+   - The `impl` blocks allow **behavioral composition** without tightly coupling classes to an inheritance tree. You can apply different implementations as needed, which is much more **flexible** than inheritance.
+
+2. **Avoids Fragile Base Class Problem**:
+   - Since `impl` blocks are separate from the class hierarchy, changes to an `impl` do not impact classes in unexpected ways like changes to a base class would. This leads to more **robust and maintainable** code.
+
+3. **Reduced Code Duplication**:
+   - `impl` blocks can be **reused** across different classes without forcing those classes into a shared hierarchy. This avoids code duplication and promotes modularity.
+
+4. **Decoupling of State and Behavior**:
+   - `impl` blocks **operate on fields** provided by the class but do not own those fields. This decouples the **state** (fields) from **behavior** (methods), making it easier to modify or replace behaviors without affecting the state management.
+
+5. **Easier Composition**:
+   - Classes can **compose behaviors** from multiple `impl` blocks. This allows for **mix-and-match** capabilities, which is much harder to achieve with traditional inheritance where a class can only inherit from one parent.
+
+### Disadvantages of Type-C Approach
+
+1. **Increased Complexity in Setup**:
+   - Defining interfaces, `impl` blocks, and then composing them in classes can initially feel more **complex** compared to just extending a base class. It requires developers to think in terms of **composition** rather than inheritance.
+
+2. **Lack of Inheritance-Based Polymorphism**:
+   - Traditional polymorphism via inheritance (e.g., treating all derived types as the base type) is less direct. Instead, Type-C relies on **interface polymorphism**, which may require more explicit implementation.
+
+3. **Learning Curve**:
+   - Developers used to traditional OOP may face a **learning curve** in understanding how to effectively use interfaces, `impl`, and class composition to achieve the same goals that they would with inheritance.
+
+## The Type-C Mindset: Establishing Abstract Behavior Through Interfaces, Implementations, and Classes
+
+When developing with Type-C, it is important to adopt a mindset that emphasizes **modularity, reusability**, and **composition over inheritance**. The typical workflow involves three key steps:
+
+### 1. Establish Abstract Behavior Through Interfaces
+
+In Type-C, **interfaces** are used to define the **contract** or **abstract behavior** that a class must fulfill. Interfaces are essential for describing **what** capabilities are required without specifying **how** they are implemented.
+
+- **Think of interfaces as blueprints** for behavior. They establish the expectations for a class, defining methods that must be implemented.
+- This step helps ensure consistency and provides a clear way for multiple classes to adhere to the same set of functionalities.
+
+Example:
+```tc
+type Object3D = interface {
+    fn getPosition() -> Vec3
+    fn setPosition(pos: Vec3) -> void
+    fn getRotation() -> Vec3
+    fn setRotation(rot: Vec3) -> void
+    fn getScale() -> Vec3
+    fn setScale(scale: Vec3) -> void
+}
+```
+- Here, the `Object3D` interface defines the methods that any 3D object should have, ensuring consistent transformation behavior.
+
+### 2. Define Common Implementations
+
+**Implementations (`impl`)** provide the actual reusable **behavior** for fulfilling the contracts established by interfaces. Implementations can be thought of as **modules of behavior** that are easily reusable across multiple classes.
+
+- `impl` blocks operate on **parameterized fields**, meaning they do not own the state but expect the class to provide it. This ensures flexibility and decouples behavior from state.
+- Implementations can enforce requirements for fields or interfaces, making them powerful tools for **composable, reusable behavior**.
+
+Example:
+```tc
+type Default3DPropsImpl = impl (
+    position: Vec3,
+    rotation: Vec3,
+    scale: Vec3
+) {
+    fn getPosition() -> Vec3 = this.position
+    fn setPosition(pos: Vec3) -> void { this.position = pos }
+    // Other methods like getRotation, setRotation, etc.
+}
+```
+- In this example, `Default3DPropsImpl` provides methods that can be reused by any class with the appropriate fields (`position`, `rotation`, `scale`).
+
+### 3. Write Classes as the Final Part
+
+**Classes** are the final part of the composition process in Type-C. They **define the state** (fields) and bring together the **interfaces** and **implementations** to create a fully functional entity.
+
+- Classes **own the fields** and use `impl` blocks to fulfill interface requirements and add behavior.
+- By using `impl` blocks, classes can easily **compose multiple behaviors** without needing to inherit from a rigid hierarchy.
+
+Example:
+```tc
+type StaticMesh = class Object3D {
+    let position: Vec3
+    let rotation: Vec3
+    let scale: Vec3
+    let mesh: Mesh
+
+    impl Default3DPropsImpl(position, rotation, scale)
+
+    fn init(mesh: Mesh, position: Vec3, rotation: Vec3, scale: Vec3) {
+        this += {position, rotation, scale, mesh}
+    }
+
+    fn render() -> void {
+        println("Rendering StaticMesh")
+    }
+}
+```
+- Here, `StaticMesh` defines the fields (`position`, `rotation`, `scale`, `mesh`) and uses `Default3DPropsImpl` to provide the transformation behavior, fulfilling the `Object3D` interface.
+
+### The Proper Way of Thinking in Type-C
+
+- **Abstract First**: Start by defining **interfaces** that represent the behavior you expect. This establishes clear, reusable contracts that multiple classes can adhere to.
+- **Compose Behavior**: Use **implementations** to define how the behavior should be executed, without worrying about ownership of the state. This makes the behavior **modular** and **easy to reuse**.
+- **Concrete Composition**: Finally, create **classes** that own the fields and **use implementations** to assemble the desired behavior. This allows for flexible composition and avoids the rigidity of inheritance.
+
+By following this approach, Type-C encourages a **modular, flexible**, and **composable** way of programming that avoids the pitfalls of deep inheritance chains. This mindset allows for scalable and maintainable code, where behaviors are easy to modify, extend, and reuse without affecting unrelated parts of the system.
+
+### Summary: Side-by-Side Comparison
+
+| Aspect                      | Traditional OOP (Inheritance)                | Type-C (Interfaces & Implementations)       |
+|-----------------------------|---------------------------------------------|---------------------------------------------|
+| **Code Reuse**              | Through inheritance from base classes       | Through reusable `impl` blocks              |
+| **Hierarchy**               | Rigid, often deep inheritance hierarchies   | Flat, modular composition                   |
+| **Flexibility**             | Limited by single inheritance               | Highly flexible; mix-and-match behaviors    |
+| **Coupling**                | Tight coupling between base and derived    | Loose coupling; classes use `impl` as needed|
+| **Maintenance**             | Changes in base can break derived classes   | Changes in `impl` are isolated              |
+| **State Ownership**         | Base class owns state                      | State defined by class, used by `impl`      |
+| **Polymorphism**            | Via inheritance                            | Via interfaces                              |
+| **Complexity**              | Simpler setup, but harder to modify later  | More setup initially, but easier to extend  |
+
+### Conclusion
+
+The **Type-C approach** using interfaces, `impl`, and class composition provides a **modern alternative** to traditional inheritance. It embraces **composition over inheritance**, leading to more **modular, reusable, and maintainable** code. While it introduces more complexity initially and has a learning curve, it avoids many of the pitfalls of deep inheritance hierarchies, such as rigidity and the fragile base class problem.
+
+On the other hand, **traditional OOP with inheritance** is straightforward and easy to understand for smaller projects but can become cumbersome and brittle as projects grow and hierarchies deepen.
+
+Ultimately, Type-C's approach provides developers with **greater flexibility** and **modular tools** to build scalable software systems, particularly beneficial in domains like game development, where behaviors are varied and often context-specific.

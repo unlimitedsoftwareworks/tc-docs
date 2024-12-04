@@ -73,7 +73,7 @@ as identifiers: `as`, `as!`, `as?`, `break`, `cfn`, `class`, `const`, `continue`
 `do`, `else`, `enum`, `extern`, `false`, `fn`, `for`,
 `foreach`, `from`, `if`, `import`, `in`, `interface`,
 `is`, `let`, `match`, `mut`, `mutate`, `new`, `null`,
-`return`, `static`, `strict`, `struct`, `this`, `true`,
+`unreachable`, `return`, `static`, `strict`, `struct`, `this`, `true`,
 `type`, `unreachable`, `variant`, `while`, `yield`, `yield!`.
 
 
@@ -266,8 +266,8 @@ file. Importing modules must be the first action. While not
 mandatory, if present, must exclusively occupy the beginning of a
 type-c file.
 
-2.  **Type Declarations**: Unlike some languages that allow inline type
-declarations, type-c insists on global type declarations. This
+2.  **Type & Name Declarations**: Unlike some languages that allow inline type
+declarations, type-c insists on global or namespace type declarations. This
 architectural choice facilitates easy type imports across different
 modules.
 
@@ -299,7 +299,7 @@ implicitly imported into A.
 
 ```tc
 // fn someX() -> X
-import someX from xfile
+from xfile import someX
 
 let x = someX()
 // This will compile as the compiler knows the type X
@@ -316,14 +316,9 @@ import std.io as inputOutput
 // from .. import as
 from std.io import print as printPlease
 
-// from .. import *
-from std.io import *
-
-// import *
-import std.io.*
 
 // multiple imports
-from std.io import print, printf as printFmt
+from std.io import print, scan
 ```
 
 ## Variable Declarations:
@@ -340,10 +335,8 @@ Type inference isn't automatic for literals, so either the type must be explicit
 
 ```tc
 let x = 1 as u32
-let y = u32(1)
+let y: u32 = 1
 ```
-
-Casting as a function call, like `u32(1)`, is permitted only for basic data types. This feature simplifies working with literals and type conversions.
 
 ### Multiple Declarations
 
