@@ -1,36 +1,24 @@
 
 # Introduction
 
-Type-C is (or aims to be)a versatile and high-performance programming language tailored for performance-intensive applications, such as user interfaces,
-games, and web services, etc. While Type-C can be embedded in various applications as a scripting language or run on resource-constrained
- devices, its goal is to truly excels in scenarios where speed and efficiency are paramount. It is designed with a clear philosophy and specific goals,
- which may resonate with some developers and not with others. The language draws inspiration from a variety of sources, including C, Java, and TypeScript.
- TypeScript's powerful type inference engine, Java's structure, and C's straightforwardness have all played a role in shaping Type-C. The primary aim of
- Type-C is to offer an enjoyable, expressive, and efficient programming experience. While it does not prioritize top-notch real-time performance or the
- absolute simplicity of writing, it enforces specific design patterns that contribute to robust and maintainable enterprise-grade software (hopefully).
+Type-C is a work in progress programming language, with the following goals in mind:
+1. Speed: Type-C's runtime aims to be fast and efficient
+2. Safety: Type-C aims to be safe
+3. Expressive: Type-C aims to be expressive and productive
+
+Type-C is a modern take of C programming language but for general purpose programming.
+It is inspired by languages such as Javascript, Typescript, C.
 
 
-At the time of writing, Type-C is still in the early stages of development, and the language is not yet fully implemented. The overall
-project is structured into a compiler written in TypeScript and a VM written in C.
+<div role="alert" className="alert striped1">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>
+        <b>Note from the author:</b>
+        Type-C doesn't aim to replace any other language. I do not claim that Type-C to be better, faster or safer than any other language.
+        With Type-C, I am implementing my own ideas and concepts, and I am sharing them with the world.
+        If you think Type-C is cool, then I am happy to hear that. If you think Type-C I would appreciate **constructive feedback**.
+    </span>
+</div>
 
-### Language Features
-Majority of the language features are already implemented, with some basic unit testing, But some features are still missing
-
-The missing features are:
-- [x] Proper errors
-- [x] Namespaces
-- [x] Struct/Array Destructuring `[1, 2, ...c]`
-- [x] Closures
-- [x] Coroutines
-- [ ] ~~Concurrency~~
-- [ ] IR optimizations
-- [ ] Proper unit tests
-
-### VM Features
-It is hard to enumerate the features of the VM, so i will jump right away into the missing ones:
-- [x] Templates (also need to be implemented in the compiler)
-- [ ] Garbage Collector
-- [ ] Assembler
-- [ ] Disassembler
-- [ ] Debugger
-- [ ] JIT Compiler (long shot)
+While Type-C shared few similarities with C, but it is not a superset of C. It is a new language with its own syntax and semantics.
+Some C concepts still applied, such as arguments and upvalues being passed by values and not reference.
