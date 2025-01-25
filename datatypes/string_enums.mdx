@@ -1,0 +1,57 @@
+
+# String Enums
+
+String Enums behave as regular Enums except they act directly as values. Since they behave exactly the same as Strings,
+they can be nullable as well.
+
+## Goal for String Enums
+String enums are useful when you want both an enum type and a string serialization of the enum.
+Its goal is to model things like: `FileOpenMode: "r" | "w"` or `Encoding: "utf-8" | "utf-16" | "utf-32" | "ascii" | "latin1" | "binary" | "base64" | "hex"`.
+
+```tc
+type Mode = "read" | "write" | "execute"
+```
+
+Each value in the Enum is a string literal, but nothing is inferred at runtime.
+
+```tc
+type Mode = "read" | "write" | "execute"
+type Mode2 = "read" | "write"
+
+fn run(mode: Mode) {
+    ...
+}
+
+let mode: Mode2 = "read"
+run(mode)
+run("execute")
+```
+
+## Inference and Type Checking
+From a compiler perspective, if a string literal is being evaluated without a hint, then it will be inferred as a regular string.
+To infer a String Enum, a hint must be provided, or casting at least.
+
+```tc
+type FileOpenMode = "read" | "write" | "execute"
+
+let modes1: FileOpenMode[] = ["read", "execute"] // FileOpenMode[]
+let modes2: ["read", "write", "execute"] // String[]
+let modes3 = ["read", "write"] as FileOpenMode[] // FileOpenMode[]
+```
+
+## Casting
+Regular casting from StringEnum to String is straightforward, but the reverse is not.
+To cast a StringEnum to a String, safe casting is recommended:
+
+```tc
+type Mode = "read" | "write" | "execute"
+
+let mode1 = "read" // mode1: String
+let mode2 = mode1 as? Mode // mode2: Mode?
+```
+
+The safe operator here will automatically check if the value of mode1 is within the bounds of the Mode Enum, and if so,
+will return the value, otherwise it will return `null`.
+
+It important to note that the `as?` operator in this case, will compare against all possible enum values, at run-time thus
+having an additional run-time cost, so if performance is a concern, it is recommended to implement your own optimized version of the cast.

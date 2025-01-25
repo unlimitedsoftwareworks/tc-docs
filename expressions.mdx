@@ -10,58 +10,28 @@ Expressions form the building blocks of any Type-C program. They are fundamental
 Every expression must return a value. That's why, when reviewing `if-else` and `match` expressions, we always had to provide an `else` branch.
 
 ## Operators and Precedence
-
-| Precedence | Operator              | Type                                   | Associativity | Overloadable |
-|------------|-----------------------|----------------------------------------|---------------|--------------|
-| 16         | `unreachable`         | Object creation                        | LTR           | No           |
-| 16         | `mutate`              | Object creation                        | LTR           | No           |
-| 16         | `coroutine`           | Object creation                        | LTR           | No           |
-| 16         | `yield`, `yield!`     | Object creation                        | LTR           | No           |
-| 16         | `new`                 | Object creation                        | LTR           | No           |
-| 16         | `spawn`               | Process spawning                       | LTR           | No           |
-| 16         | `await`               | Asynchronous wait                      | LTR           | No           |
-| 15         | `()`                  | Function call                          | LTR           | Yes          |
-| 15         | `[]`                  | Array subscription                     | LTR           | Yes          |
-| 15         | `?.`                  | Nullable member selection              | LTR           | No           |
-| 15         | `.`                   | Member selection                       | LTR           | No           |
-| 14         | `++` (postfix)        | Unary post-increment                   | LTR           | Yes          |
-| 14         | `--` (postfix)        | Unary post-decrement                   | LTR           | Yes          |
-| 13         | `++` (prefix)         | Unary pre-increment                    | RTL           | Yes          |
-| 13         | `--` (prefix)         | Unary pre-decrement                    | RTL           | Yes          |
-| 13         | `+`                   | Unary plus                             | RTL           | Yes          |
-| 13         | `-`                   | Unary minus                            | RTL           | Yes          |
-| 13         | `!`                   | Unary logical negation                 | RTL           | Yes          |
-| 13         | `!!`                  | Denull                                 | RTL           | Yes          |
-| 13         | `~`                   | Unary bitwise complement               | RTL           | Yes          |
-| 12         | `*`                   | Multiplication                         | LTR           | Yes          |
-| 12         | `/`                   | Division                               | LTR           | Yes          |
-| 12         | `%`                   | Modulus                                | LTR           | Yes          |
-| 11         | `+`                   | Addition                               | LTR           | Yes          |
-| 11         | `-`                   | Subtraction                            | LTR           | Yes          |
-| 10         | `<<`                  | Bitwise left shift                     | LTR           | Yes          |
-| 10         | `>>`                  | Bitwise right shift                    | LTR           | Yes          |
-| 9          | `<`                   | Relational less than                   | LTR           | Yes          |
-| 9          | `<=`                  | Relational less than or equal          | LTR           | Yes          |
-| 9          | `>`                   | Relational greater than                | LTR           | Yes          |
-| 9          | `>=`                  | Relational greater than or equal       | LTR           | Yes          |
-| 9          | `is`                  | Type comparison (objects only)         | LTR           | No           |
-| 9          | `as`, `as?` `as!`     | Type casting                           | LTR           | No           |
-| 8          | `==`                  | Relational is equal to                 | LTR           | No           |
-| 8          | `!=`                  | Relational is not equal to             | LTR           | No           |
-| 7          | `&`                   | Bitwise AND                            | LTR           | Yes          |
-| 6          | `^`                   | Bitwise exclusive OR                   | LTR           | Yes          |
-| 5          | `\|`                  | Bitwise inclusive OR                   | LTR           | Yes          |
-| 4          | `&&`                  | Logical AND                            | LTR           | Yes          |
-| 3          | `\|\|`                | Logical OR                             | LTR           | Yes          |
-| 2          | `??`                  | Nullish coalescing operator            | LTR           | Yes          |
-| 1          | `if,else`             | Conditional Expression                 | RTL           | No           |
-| 0          | `=`                   | Assignment                             | RTL           | No           |
-| 0          | `+=`                  | Addition assignment                    | RTL           | No           |
-| 0          | `-=`                  | Subtraction assignment                 | RTL           | No           |
-| 0          | `*=`                  | Multiplication assignment              | RTL           | No           |
-| 0          | `/=`                  | Division assignment                    | RTL           | No           |
-| 0          | `%=`                  | Modulus assignment                     | RTL           | No           |
-
+| Precedence | Operators | Description |
+|------------|-----------|-------------|
+| 1 | `++` `--` (postfix) | Postfix increment/decrement |
+| 2 | `++` `--` (prefix) `+` `-`(unary) `!` `~` <br/> `new` `yield` `coroutine` `mutate` <br/> `unreachable` `throw` | Unary operators |
+| 3 | `.` `?.` `()` `[]` `!` | Member access, function calls, indexing, denull |
+| 4 | `is` `as` `as!` `as?` | Type checks and casts |
+| 5 | `*` `/` `%` | Multiplicative |
+| 6 | `+` `-` | Additive |
+| 7 | `<<` `>>` | Bit shifts |
+| 8 | `<` `<=` `>` `>=` | Relational |
+| 9 | `==` `!=` | Equality |
+| 10 | `&` | Bitwise AND |
+| 11 | `^` | Bitwise XOR |
+| 12 | `\|` | Bitwise OR |
+| 13 | `&&` | Logical AND |
+| 14 | `\|\|` | Logical OR |
+| 15 | `??` | Nullish coalescing |
+| 16 | `if` ... `else` | Conditional expression |
+| 17 | `=` `+=` `-=` `*=` `/=` `%=` | Assignment |
+| 18 | `match` .. `{` .. `}`| Pattern matching |
+| 19 | `let` ... `in` | Let binding |
+| 20 | .. `\|>` .. | Pipe Operator |
 
 ## Expressions
 Now we will review the list of all expressions in Type-C.
@@ -80,11 +50,13 @@ Binary expressions are expressions that involve two operands and an operator. Th
 Notice that binary expression can translate to class method call when the LHS of the operation is class that override the operator.
 
 ### Cast Expression
-The cast expression is used to convert a value from one type to another. Casting is safe by default, meaning the compiler will complain when you are casting from one type to another that is unrelated. Casting is explained further in the [Type Casting](type-casting/) section. Here is a basic example of a cast expression:
+The cast expression is used to convert a value from one type to another.
+Casting is safe by default, meaning the compiler will complain when you are casting from one type to another that is unrelated.
+Casting is explained further in the [Type Casting](type-casting/) section. Here is a basic example of a cast expression:
 
 ```tc
 let x: i32 = 10
-let y: u32 = x as u32 // casting is needed here
+let y: u32 = x as u32 // While it is not 100% safe, it is allowed
 ```
 
 ### Element Expression
@@ -102,7 +74,7 @@ A function call expression is used to call a function. The syntax is as follows:
 let z: u32 = f(arg1, arg2)
 ```
 
-A function call can also be a method call on an object that overloads the `__call__` method.
+A function call can also be a method call on an object that overloads the `__call__` or `()` method.
 
 Another example is:
 ```tc
@@ -110,7 +82,6 @@ MyClass.MyStaticMethod(1, 2, 3)
 ```
 
 In this example, the function call is `MyClass.MyStaticMethod` applies to the arguments `(1, 2, 3)`.
-
 
 ### If-Else Expressions
 In type-c, if-else can be used as expression, similar to python
@@ -125,9 +96,11 @@ let z: i32 = if y > 0 => y
 			 else 0
 ```
 
-The values and condition pairs `<value> if <condition>` must be comma separate, and the else expression is mandatory at the end, since expressions must always have a value.
+The else expression is mandatory at the end, since expressions must always have a value.
 
-The `if-else` expression shares the same limitation as the `let .. in` construct. It is designed to be used at the root level of an expression for clarity and correct parsing. When used within a larger expression, parentheses should be used to scope the if-else block explicitly.
+The `if-else` expression shares the same limitation as the `let .. in` construct.
+It is designed to be used at the root level of an expression for clarity and correct parsing.
+When used within a larger expression, parentheses should be used to scope the if-else block explicitly.
 
 ### Index Access Expression
 The index access expression is used to access an element in an array. The syntax is as follows:
@@ -146,7 +119,7 @@ When the compiler encounters an assignment to an array element, it will generate
 let x: u32[] = [1, 2, 3]
 x[0] = 4
 ```
-from a compiler perspective, `x[0] = 4` is translated to `IndexSet(target: x, value: 4, indexes: [0])`, the reason for this is that an indexing operation can have multiple indexes in theory:
+from a compiler perspective, `x[0] = 4` is translated to `IndexSet(target: x, indexes: [0], value=4)`.
 
 ```tc
 let x: u32[] = [1, 2, 3]
@@ -335,22 +308,37 @@ The `new` expression is used to create a new instance of a class. The syntax is 
 new <class-name>(<arguments>)
 ```
 
-Also, `new` is also used to create `lock` objects:
+Example:
 
 ```tc
-let lock<String> = new Lock("Mary")
+let x = new Array<u32>([1,2,3])
 ```
 
+Currently there is a limiation where, if the constructor is of a generic class, it has to have the generic type parameters.
+Meaning:
+```tc
+let x = new Array<u32>([1,2,3]) // OK
+let y: Array<u32> = new Array<u32>([1,2,3]) // OK
+let z: Array<u32> = new Array([1,2,3]) // Error! The generic type parameter is missing
+```
+This is normally not the case for calling methods as the generic type can be inferred from the arguments.
+
 ### Nullable Member Access Expression:
-The nullable member access expression is used to access a member of an object that may be null. Its behavior is very similar to the member access expression, but it can only be applied to nullable types. The syntax is as follows:
+The nullable member access expression is used to access a member of an object that may be null.
+Its behavior is very similar to the member access expression, but it can only be applied to nullable types.
+The syntax is as follows:
 
 ```tc
 let x: MyClass? = new MyClass()
-let y: u32 = x?.field ?? 0
+let y: Object? = x?.field
 ```
+
 The Nullable member access expression has two behaviors:
 1. When used without the nullish coalescing operator `??`, it returns a nullable type.
 2. When used with the nullish coalescing operator `??`, it returns a non-nullable type.
+
+The reason `?.` returns non-nullable type when used with `??` is because the nullish coalescing operator guarantees that the result
+will be non-nullable. This is extremely useful incase you want to get a non-nullable value from a nullable object.
 
 #### Case 1: Nullable Member Access without Nullish Coalescing Operator
 The result of a nullable member access expression, must be nullable. For example:
@@ -359,7 +347,8 @@ let point: {x: u32, y: u32}? = {1, 1}
 let x: u32 = point?.x // Invalid
 ```
 
-Since the `point` is nullable, the result of `point?.x` has the potential to be null, but since the type of the attribute `x` is `u32`, and a `u32` cannot be a nullable (numbers can't be null!), the compiler will generate an error.
+Since the `point` is nullable, the result of `point?.x` has the potential to be null, but since the type of the attribute `x` is `u32`,
+and a `u32` cannot be a nullable (numbers can't be null!), the compiler will generate an error.
 
 ```tc
 let point: {x: u32, y: u32, desc: String}? = {1, 1, "point in space!"}
@@ -375,20 +364,16 @@ When using `?.` with `??`, there is a guarantee that the result will be non-null
 let point: {x: u32, y: u32}? = {1, 1}
 let x: u32 = point?.x ?? 0 // Valid
 ```
-The compiler will realise that the result of `point?.x` is nullable, and since the nullish coalescing operator `??` is used, the result of the expression will be a valid data type.
+The compiler will realise that the result of `point?.x` is nullable, and since the nullish coalescing operator `??` is used,
+the result of the expression will be a valid data type.
 
-### `spawn` Expression
-Spawn expression is used to spawn a thread that runs concurrency with the main thread. The syntax is as follows:
-
-```tc
-let res: promise<u32> = spawn fib(100)
-```
-
-### This Expression:
+### `This` Expression:
 The `this` expression is used to access the current object's fields and methods. Hence it is only valid within a class.
 
 ### Unary Expression:
-Unary expressions are expressions that involve a single operand and an operator.
+Unary expressions are expressions that involve a single operand and an operator. Some unary operator as prefix, others are postfix, one example is the increment operator:
+`i++` or `++i`, another notable one is `!`, which acts as `not` operator, when used as postfix, it becomes a `denull` operator, which returns the non-null value
+of an expression. It is considered an `unsafe` operator when used this way, so make sure to perform necessary checks before using it.
 
 ### Unnamed Struct Expression
 This expression is used to create structs with unnamed fields. Notice that such expression requires a type hint, since the compiler can't infer the type of the struct. The syntax is as follows:
@@ -506,3 +491,51 @@ vec.x = 10
 
 (mutate vec).x = 30
 ```
+
+### `throw` Expression
+Throw behaves like unreachable but you can provide a meaningful error message.
+
+```tc
+throw "Woupsie"
+```
+
+Exceptions cannot be caught.
+
+<div role="alert" className="alert striped1">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <span>Throw semantic might change and currently under evaluation, there may just be runtime exceptions!</span>
+</div>
+
+
+### `yield` Expression
+Similar to function returns, but they are expressions and usable only within coroutines.
+See coroutine section for more details.
+
+### `|>` Pipe Operator
+Pipe operator Evaluates serves as a way to avoid backtracking to add parentheses to your code.
+In other terms, it is an operator that has the lowest precedence, and the reason behind this is to
+allow for chaining of expressions without having to surround them with parentheses, e.g
+`(x as Type).func()` becomes `x as Type |> func()`.
+
+The term pipe here doesn't have the same semantics as a pipe operator in the sense of functional programming
+(where `x |> f -> f(x)`),
+because the LHS is not given as an argument to the RHS, but rather the RHS is applied to the LHS.
+
+```tc
+let x0: u64 = new Array<u32>([1, 2, 3]).length()    // Error
+let x1: u64 = (new Array<u32>([1, 2, 3])).length()  // OK
+let x2: u64 = new Array<u32>([1, 2, 3]) |> .length() // OK
+```
+
+In these examples, the pipe operator behaves likes a member access, but it also allow for other types of expressions:
+
+```tc
+// Delays Index Access
+new Array<u32>([1, 2, 3]) |>[0] // OK
+
+// Delays Reverse IndexSet
+new Array<u32>([1, 2, 3]) |> [-1] = 4 // OK
+```
+
+It is important to note that RHS of `|>` cannot be any expression, it must be a member selection expression, `.`, `?.`, `[]`,
+`[-]`, `[]=`, `[-]=`, `!` (denull) or `()`.

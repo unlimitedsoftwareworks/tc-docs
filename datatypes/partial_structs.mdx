@@ -1,0 +1,32 @@
+Partial Structs
+===
+
+<div role="alert" className="alert striped1">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>This page describes a work in progress feature, that is not yet implemented</span>
+</div>
+
+
+Partial structs are structs that can be partially initialized. Partial structs are useful when you want to initialize
+a struct with only a few fields, and set of default values for the rest.
+
+Partial structs have great limitations compared to regular structs, when dealing with them.
+The compiler doesn't assume the presence of any field in a partial struct, therefore a nullish coaslescing operator `??`
+is required to access their fields.
+
+```tc
+type Point = {x: f64, y: f64}
+let p: partial<Point> = {x: 1.0}
+let y = p.y ?? 0.0
+```
+
+Since this is troublesome and verbose, it is possible to merge partial structs with regular structs.
+Merging is done through `>>` or `<<` operator depending on which direction you want to merge.
+
+
+```tc
+type Point = {x: f64, y: f64}
+let p1: partial<Point> = {x: f64}
+let p2: Point = {x: 1.0, y: 2.0} << p // p2 = {x: 1.0, y: 2.0}
+let p3: Point = p >> {x: 1.0, y: 2.0}
+```

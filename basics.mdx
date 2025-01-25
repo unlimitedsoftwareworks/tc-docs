@@ -73,7 +73,7 @@ as identifiers: `as`, `as!`, `as?`, `break`, `cfn`, `class`, `const`, `continue`
 `do`, `else`, `enum`, `extern`, `false`, `fn`, `for`,
 `foreach`, `from`, `if`, `import`, `in`, `interface`,
 `is`, `let`, `match`, `mut`, `mutate`, `new`, `null`,
-`unreachable`, `return`, `static`, `strict`, `struct`, `this`, `true`,
+`unreachable`, `return`, `static`, `strict`, `struct`, `this`, `throw`, `true`,
 `type`, `unreachable`, `variant`, `while`, `yield`, `yield!`.
 
 
@@ -82,6 +82,17 @@ as identifiers: `as`, `as!`, `as?`, `break`, `cfn`, `class`, `const`, `continue`
 Type-C doesn't require semicolons. The compiler will complain if it find
 a semi-colon unless it is part of the grammar, in cases such as for
 loops.
+
+## Line Sensitivity
+Type-C is indeed line-sensitive! Meaning that in some occasion, a new line can change the behavior of the parser.
+This is only useful in one specific case, which is parsing member selectors. For example:
+```tc
+let x = f(x).get // x = f(x).get
+let x = f // x = f, presence of new line causes the parser to stop parsing the member selector
+(x).get() // x.get()
+let x = 1
++ 2 // x = 1 + 2, new line as no effect here
+```
 
 ## Operators and Symbols
 
@@ -129,9 +140,11 @@ Below, we categorize and describe these elements.
 -   `/=` Divide and assign
 
 ### Keyword Operators
-
--   `spawn` Spawning a process
--   `await` Await a Promise
+-   `coroutine` Creates a coroutine
+-   `throw` Throws a runtime error and exits the program
+-   `yield` Yields the current coroutine
+-   `unreachable` Marks a code path as unreachable, throws a runtime error when reached
+-   `mutate` Mutate a constant expression
 -   `new` Class/Process allocator and consturctor
 -   `is` Type checking
 -   `as` Type casting
@@ -257,7 +270,7 @@ only be assigned to memory referenced objects, i.e structs and objects.
 
 ## Program Structure
 
-A standard type-c program is generally organized into several key
+A type-c program is generally organized into several key
 components. The structure ensures clean code separation and easier
 module integration. Here's what to expect in a typical file:
 
@@ -280,6 +293,9 @@ as variables.
 global variables are allowed. However, it's strongly recommended to
 limit their mutability. Your code, your rules, but you've been
 warned.
+
+5. **Namespace Declarations**: Namespaces are used to group related
+types and functions. They are declared using the `namespace` keyword.
 
 This overview serves as a blueprint. Each of these components will be
 dissected and discussed in the following sections.
@@ -308,18 +324,19 @@ println(x.value)
 let y: X = someX()
 ```
 
-You can import datatypes and functions. Global variables are not allowed.
+There are two forms of import:
 ```tc
-// import .. as
-import std.io as inputOutput
-
-// from .. import as
-from std.io import print as printPlease
-
-
-// multiple imports
-from std.io import print, scan
+import x.y.z
+from x.y.z import *
+from x.y.z import a.b, c, d as e
 ```
+
+The format is as follows: `import <file>`
+or fro `from <file> import symbol`. The `*` operator is used to import everything.
+
+Since a file can export namespace, you load the entire namespace, unpack it with `*` or load specific
+symbols from it.
+
 
 ## Variable Declarations:
 

@@ -52,6 +52,26 @@ fn fib(n: u32) -> u32 = match n {
 }
 ```
 
+## Function Overloading
+It is possible to overload functions, with some limitations.
+
+1. Functions must have different argument types. Return types does not count towards the signature
+2. Overloaded functions must be within the same scope
+
+```tc
+// from std.math
+
+from std.vm_api.stdmath import MathAPI
+
+fn abs(x: f64) -> f64 {
+    return MathAPI.absd(x)
+}
+
+fn abs (x: f32) -> f32 {
+    return MathAPI.absf(x)
+}
+```
+
 ## Notes:
 
 1. Variadic arguments are not support in Type-C (Variadic functions are functions that can take a variable number of arguments).

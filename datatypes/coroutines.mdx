@@ -17,7 +17,7 @@ implementation of coroutines.
 ### Coroutine Design
 
 Coroutins in Type-C are heavily inspired by Lua. However, my goal is for Type-C to be deterministic and predictable, so I've made some changes to the design.
-First, any function that **yields**, is now considered to be a **Coroutine Callable Function**. Meaning you cannot these directly. To distinguish between such functions
+First, any function that **yields**, is now considered to be a **Coroutine Callable Function**. Meaning you cannot call these directly. To distinguish between such functions
 and regular functions, regular functions are annotated with `fn` keyword, while coroutine callable functions are annotated with `cfn` keyword.
 Coroutines always use latest arguments (unlike in Lua). If backup is needed, it should be done manually.
 

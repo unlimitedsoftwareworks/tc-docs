@@ -3,8 +3,6 @@
 In Type-C, functions are first-class citizens, allowing them to be assigned to variables, passed as arguments, or returned from other functions. The language supports the definition of custom types for functions, streamlining their use in various contexts.
 Currently, the variable name has to be present within a function type despite not really being used.
 
-
-
 ## Example
 
 ```tc
@@ -13,11 +11,11 @@ type FunctionType = fn(s: ServerResponse) -> void
 
 // Declare a variable of type FunctionType
 let x: FunctionType = (e: ServerResponse) -> void {
-    io.print(e.status)
+    println(e.status)
 }
 
 // A higher-order function that maps a function onto an array.
-let apply = fn(f: fn(u32) -> u32, arr: u32[]) -> u32[] {
+let apply = fn(f: fn(x: u32) -> u32, arr: u32[]) -> u32[] {
     let new_arr = []
     foreach x: u32 in arr {
         new_arr.push(f(x))
@@ -47,22 +45,19 @@ let f3: fn(mut x: u32) -> u32 = f1 // Error
 let f4: fn(x: u32) -> u32 = f2 // Error
 ```
 
-## Function Overloading
-It is possible to overload functions, with some limitations.
+### `fn` vs `cfn`
+Since this section explain function as in a datatype, there is a need to differentiate between regular functions and
+coroutine callable functions.
 
-1. Functions must have different argument types. Return types does not count towards the signature
-2. Overloaded functions must be within the same scope
+Later through the docs, we will review `coroutine` data type. Coroutines `yield` a value and not `return`, this is a
+different behavior from regular functions. Hence, there are actually 2 types of functions in Type-C, `fn` and `cfn`.
 
+`fn` is used for regular functions and `cfn` is used for coroutines.
+
+From a datatype perspective, there is a difference between `fn` and `cfn`
 ```tc
-// from std.math
-
-from std.vm_api.stdmath import MathAPI
-
-fn abs(x: f64) -> f64 {
-    return MathAPI.absd(x)
-}
-
-fn abs (x: f32) -> f32 {
-    return MathAPI.absf(x)
-}
+let f1: cfn(x: u32) -> u32 = .. // this is a coroutine function
+let f2:  fn(x: u32) -> u32 = .. // this is a regular function
 ```
+
+This is further discussed in the [coroutines](/docs/datatypes/coroutines) section.

@@ -1,18 +1,133 @@
 # Statements
 
-In programming, expressions and statements are two fundamental concepts that often get confused. An expression is any piece of code that evaluates to a single value. For example, `2 + 2` is an expression that evaluates to `4`. You can combine expressions to make more complex expressions. For example, `(2 + 2) * 3}`. Generally speaking expressions don't have side effects, meaning they don't change any state or have observable interactions. However, some expressions like function calls may have side effects. Statements on the other hand performs an action and doesn't necessarily evaluate to a value. Statements are executed for their side effects, like changing a variable's value or printing something to the console. You can't combine statements in the way you can combine expressions and often have side effects, like modifying variables or interacting with I/O. The takeaway is:
+In programming, expressions and statements are two fundamental concepts that often get confused.
+An expression is any piece of code that evaluates to a single value. For example, `2 + 2` is an
+expression that evaluates to `4`. You can combine expressions to make more complex expressions.
+For example, `(2 + 2) * 3}`. Generally speaking expressions don't have side effects, meaning they
+don't change any state or have observable interactions. However, some expressions like function
+calls may have side effects. Statements on the other hand performs an action and doesn't
+necessarily evaluate to a value. Statements are executed for their side effects, like changing a
+variable's value or printing something to the console. You can't combine statements in the way
+you can combine expressions and often have side effects, like modifying variables or interacting
+with I/O. The takeaway is:
 	- Expressions answer the question "What is the value?"
 	- Statements answer the question "What to do next?"
 
 ## Let Statement
-The `let` statement in Type-C is used for variable declaration and initializing it with a value. Everything we have been through in section Type-C basics variable declaration, still applies. The syntax is straightforward you specify the keyword `let`, followed by the variable name, an optional type annotation (if the inference engine can infer the type from the value), and a mandatory initial value. Here are some examples:
+The `let` statement in Type-C is used for variable declaration and initializing it with a value.
+Everything we have been through in section Type-C basics variable declaration, still applies.
+The syntax is straightforward you specify the keyword `let`, followed by the variable name,
+an optional type annotation (if the inference engine can infer the type from the value),
+and a mandatory initial value. Here are some examples:
 
 ```tc
 let y: u32 = 42  // Declare a variable named y of type u32 and initialize it with 42.
 let z: f64 = 3.14  // Declare a variable named z of type f64 and initialize it with 3.14.
 ```
 
-Once declared, you can't redeclare the variable with the `let` statement, but you can change its value if it's not declared as immutable. Remember, in Type-C the `let` statement itself does not return a value, which distinguishes it from expressions.
+Once declared, you can't redeclare the variable with the `let` statement, but you can change its
+value if it's not declared as cosntant. Remember, in Type-C the `let` statement itself does not
+return a value, which distinguishes it from expressions.
+
+### Declaring multiple variables
+One `let` statement can define multiple variables, separated by commas. Each variable have its own
+type annotation and initial value. Here is an example:
+
+```tc
+let x: u32 = 1, y: u32 = 2
+```
+
+### Declaring Constants
+In Type-C, you can declare a variable as a constant using the `const` keyword. Constants are immutable, meaning their value cannot be changed after
+initialization.
+
+```tc
+let const z: u32 = 10
+```
+
+### Destructuring
+It is possible to declare variables by destructuring an array, a tuple or a struct.
+Each one has a slightly different syntax, for example, when destructuring a struct, you can either reuse the
+name of the field as defined in the struct or assign a new name to it.
+When destructuring an array or a tuple, you can use `_` to ignore a value, since the order of the values matters.
+And finally, both struct and array destructuring supports spread operator `...` to capture the rest of the values.
+
+Here is an example:
+
+```tc
+type Point = {
+    xAndY: {
+        x: f32,
+        y: f32
+    },
+    z: f32
+}
+
+// a function to demonstrate tuple destructuring
+fn getPoints() -> (Point, Point) = (
+        {xAndY: {x: 1.0f, y: 2.0f}, z: 3.0f},
+        {xAndY: {x: 4.0f, y: 5.0f}, z: 6.0f}
+    )
+
+fn test() {
+    // creating a struct
+    let p1 = {xAndY: {x: 1.0f, y: 2.0f}, z: 3.0f}
+
+    // destructing using same field names
+    let {xAndY, z} = p1)
+
+    // destructing using different field names
+    let {xAndY: xy, z: z2} = p1
+
+    // creating an array
+    let arr = [{x: 1.0f, y: 2.0f}, {x: 3.0f, y: 4.0f}, {x: 5.0f, y: 6.0f}]
+
+    // destructing an array, skipping the second value and capturing the rest
+    let [p2, _, ...p4] = arr
+
+    // destructing a tuple
+    let (p5, p6) = getPoints()
+}
+```
+
+### Nullable Variable Declaration
+Since type annotation is optional, sometimes you want to the variable to be nullable without specifying the type.
+Hence you can use the `?` operator to declare a nullable variable right after its name. Here is an example:
+
+```tc
+fn test() {
+    // nullable variable declaration
+    let p? = {a: 1.0f, b: 2.0f, c: 3.0f}
+
+    // creating a struct
+    let p1 = {xAndY: {x: 1.0f, y: 2.0f}, z: 3.0f}
+
+    // nullable var decl with struct deconstruction
+    let {xAndY?, z} = p1
+
+    // nullable var decl with struct deconstruction and renaming
+    let {xAndY: xy?, z: z2} = p1
+
+    // creating an array
+    let arr = [{x: 1.0f, y: 2.0f}, {x: 3.0f, y: 4.0f}, {x: 5.0f, y: 6.0f}]
+
+    // destructing an array into nullables, skipping the second value and capturing the rest
+    let [p2?, p3?, ...p4?] = arr
+
+    // destructing a tuple into nullables
+    let (p5?, p6?) = getPoints()
+}
+```
+
+Declaring a variable as nullable will raise a compilation error **Variable initializer is already nullable, please remove the nullable hint from the variable declaration**`
+if the initializer results in a nullable type!
+
+
+```tc
+fn getPoint() -> Point? = null
+let p? = getPoint() // Error!
+```
+
 
 ## Function Declaration
 One example of function declaration statement is the `main` function from our hello world example. Let's review its syntax:
@@ -112,7 +227,7 @@ The classical for loop, in type-c it is very similar to that of C family too, le
 
 ```tc
 fn main(args: string[]){
-    for i: u32 = 0; i < 10; i++ {
+    for let i: u32 = 0; i < 10; i++ {
         io.print("Hello, World!")
     }
 }
@@ -121,20 +236,19 @@ fn main(args: string[]){
 You can declare multiple variables in the initialization block, the condition block must always yeild an expression to be evaluate, and the final block, you can write multiple comma-separated expresions.
 
 ## Foreach loop
-<div role="alert" className="alert alert-warning">
-  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-  <span>Warning: `foreach` loops will be supported in the initial version of the language, since they will rely on the standard library!</span>
-</div>
+`foreach` loop automizes looping for `Iterable`, Native arrays data. Unlike for loop, you do not have to declare iterating
+variables within `foreach` statement, which variables you use will be declared automatically.
 
-`foreach` loop automizes looping for `Iterable` data. Here is an example:
+Think of `foreach` statement as Macro that expands to a for loop, under the hood.
+
+Here is an example:
 
 ```tc
-fn main(args: string[]){
-    foreach s: string in args {
-        println(s)
-    }
-}
+    foreach s in args { .. } // s: String
+    foreach i, s in args { .. } // i: u64, s: String
+    foreach const i, s in args { .. } // i: const u64, s: const String
 ```
+
 
 ## While Loop
 The `while` loop is used to execute a block of code repeatedly as long as a given condition is true. The condition is evaluated before executing the loop's body, and if it's true, the body is executed. This process repeats until the condition becomes false. Here's an example:

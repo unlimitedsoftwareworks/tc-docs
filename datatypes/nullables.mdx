@@ -53,13 +53,12 @@ Nullable provides a powerful mechanism to write type-safe programs and avoid mis
 |Nullable?|Type|
 |---|---|
 |No|Basic Data Type (`u8, i8 .. u64, i64, f32, f64, bool`), Enum|
-|Yes|Array, Variant, Function, Class, Interface, Struct, Process|
+|Yes|Array, Variant, Function, Class, Interface, Struct, .. |
 
 Another additional operator to deal with nullable objects is the `?.` operator. This operator is used to access a property of a nullable object. If the object is null, the operator will return null. Here is an example:
 
-
 ```tc
-let middleName: string? = null
+let middleName: String? = null
 let upperMidderName = middleName?.toUpperCase()
 ```
 
@@ -80,9 +79,8 @@ Only composite types are allowed to be nullables, which are:
 - Classes
 - Interfaces
 - Structs
-- Threads
-- Locks
-- Promises
+- Coroutines
+- String Enums
 
 <div role="alert" className="alert alert-error">
   <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
