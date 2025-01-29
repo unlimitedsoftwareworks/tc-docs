@@ -1,5 +1,19 @@
 # Type Joins
-Type join is an operation to help reduce the necessaity to create new types. It is a way to combine multiple types into a single type. Only interface datatypes can joined together. Resuting in a new type combining the methods of both. When comparing actual values with a type join, the values must have a data type that represents a class that implements all of the interfaces in the type join. A type join is declared using the `&` operator. Here is an example:
+Type join is an operation to help reduce the necessaity to create new types.
+It is a way to combine multiple types into a single type.
+
+Currently only two data types support joining, interfaces and structs.
+You cannot mix and match however, as joins are only allowed between the same data types.
+
+Joining two types resuts in a new type combining both.
+
+A rule of thumb when it comes to joining types is that if both types have the same field,
+the field type must be exactly the same on both types. Otherwise, the join will fail.
+
+## Interface Joins
+Consider an interface join, when comparing actual values with an interface type join,
+the values must have a data type that represents a class that implements all of the interfaces in the type join.
+A type join is declared using the `&` operator. Here is an example:
 ```tc
 type Movable = interface {
     move(x: u32, y: u32) -> void
@@ -31,8 +45,8 @@ let a: Draggable & Drawable = x // Error! Square does not implement Draggable
 ```
 
 <div role="alert" className="alert alert-warning">
-  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-  <span>Nullables cannot be joined with interfaces. This is because nullables are not interfaces. They are a special type of data type. However, a join type can be nullable. Here is an example:</span>
+    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+    <span>Nullables cannot be joined. This is because nullables are not interfaces. They are a special type of data type. However, a join type can be nullable</span>
 </div>
 
 ```tc
@@ -56,3 +70,11 @@ let x: (Movable & Drawable)? = null
   <span>From a compiler perspective, joins are transformed into a single interface that groups all methods together, hence all rules that applies to interface, applies the the entire group of joins as well.</span>
 </div>
 
+
+## Struct Joins
+Struct joins are similar to interface joins.
+
+```tc
+type Point2D = { x: f64, y: f64 }
+type Point3D = Point3D & { z: f64 }
+```

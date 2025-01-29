@@ -23,10 +23,93 @@ let y = p.y ?? 0.0
 Since this is troublesome and verbose, it is possible to merge partial structs with regular structs.
 Merging is done through `>>` or `<<` operator depending on which direction you want to merge.
 
+## Merge Operator
+- `>>`: The `>>` operator would merge all fields from left struct to the one on the right
+- `<<`: The `<<` operator would merge all fields from right struct to the one on the left.
+
+Merge operator also works with regular structs on both sides, and would only merge the common fields
+between the two structs, and would not add any new fields.
 
 ```tc
-type Point = {x: f64, y: f64}
-let p1: partial<Point> = {x: f64}
-let p2: Point = {x: 1.0, y: 2.0} << p // p2 = {x: 1.0, y: 2.0}
-let p3: Point = p >> {x: 1.0, y: 2.0}
+let p: partial<Point> = {x: 1.0}
+let p2: Point = p >> {y: 2.0}
+
+let p3: Point = {x: 10.0} << p // p3: {x: 10.0}
+let p4 = {x: "hello"} << p // Error! Type mismatch
+let p5 = {y: 1} << {z: 1} // Error! both sides have no common fields
 ```
+
+## Why spread operator doesn't work
+The spread operator `...` is not used for merging partial structs with concrete structs, for a simple reason:
+The spread operator changes the the type of the struct, i.e it adds fields to the struct:
+```tc
+let p = {x: 1.0f, y: 2.0f}
+let p2 = {z: 3.0f, ...p} // p2 is of type {x: f32, y: f32, z: f32}
+```
+
+The partial struct is not guarenteed to have all fields, hence the spread operator would not work as expected.
+Hence to merge.
+
+## Type Checking for partial structs
+Type checking for partial structs is different compared to regular structs.
+
+For example:
+
+```tc
+    let s1: {x: u32, y: u32} = {x: 1, y: 2, z: 3} // OK
+    let s2: Partial<{x: u32, y: u32}> = {x: 1, y: 2, z: 3} // Ok
+    let s3: Partial<{x: u32}> = {x: 1, y: 2, z: 3} // Ok
+    let s4: Partial<{x: u32}> = s2 // Ok
+    let s5: Partial<{x: u32, y: u32}> = s4 // OK
+    let s5: Partial<{x: u32}> = {y: 1} // Error
+}
+```
+
+For partial structs, as long as the other type has some fields that are present in the partial struct, the type checking would pass.
+
+## Partial Struct Member Access
+Because the values of the partial struct are not aguarenteed to be present (at least from the compiler's perspective),
+reading a field is required to be wrapped with a nullish coalescing operator `??`. As of writing, it is not possible. Partial
+structs are read only. The reason the following.
+
+At runtime, all objects must have rigid structures, the only thing that can be extended is the size are arrays.
+```tc
+fn getPoint() = {x: 1 as u32, y: 2 as u32}
+let p: partial<{x: u32, y: u32, z: u32}> = getPoint()
+```
+
+The issue here is that `p` is a partial struct, and references a struct that has only two fields allocated at runtime. Hence,
+accessing `p.z` would be an out of bounds access.
+
+In summary:
+
+```tc
+let p: partial<{x: u32, y: u32}> = {x: 1.0}
+let y = p.y ?? 0.0 // OK
+p.x = 10 // Error
+p.x += 20 // Error
+p.x = p.x ?? 10 + 20 // OK
+```
+
+
+## Nullable Partial Struct
+Partial is not empty. A partial struct when initialized, must have at least one field set, otherwise, use nullable instead.
+
+```tc
+let data: { name: String, coords: partial<{x: f32, y: f32}>? } = {"hello, world!", null}
+let x1 = data.coords?.x ?? 1.0f
+```
+
+In this example, if `coords` is null or the field `coords.x` is not set, `x1` will be set to `1.0f` in both cases.
+
+## Additional Notes
+`partial` applies only the top level struct, nested fields are not inherently partial anlesunless otherwise specified.
+
+```tc
+let data: { name: String, coords: partial<{x: f32, y: f32, z: {
+    x: u32, y: u32
+}}>? } = {"hello, world!", z: {x: 1}}
+```
+<div className="bg-red-800 text-white px-3 py-0 rounded border-r-4  code-inline border-2 border-base-200">
+    Compiler Error: Type mismatch, expected {`struct{x:u32,y:u32} but found struct{x:u32}`}: Type mismatch, expected struct with at least 2 fields, got 1
+</div>

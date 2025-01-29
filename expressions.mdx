@@ -323,7 +323,7 @@ let z: Array<u32> = new Array([1,2,3]) // Error! The generic type parameter is m
 ```
 This is normally not the case for calling methods as the generic type can be inferred from the arguments.
 
-### Nullable Member Access Expression:
+### `?.` Nullable Member Access Expression:
 The nullable member access expression is used to access a member of an object that may be null.
 Its behavior is very similar to the member access expression, but it can only be applied to nullable types.
 The syntax is as follows:
@@ -366,6 +366,30 @@ let x: u32 = point?.x ?? 0 // Valid
 ```
 The compiler will realise that the result of `point?.x` is nullable, and since the nullish coalescing operator `??` is used,
 the result of the expression will be a valid data type.
+
+### `??` Nullish Coalescing Operator
+The nullish coalescing operator is used to provide a default value when the left-hand side of the operator is null or undefined.
+More technically, it acts as a jump. There are 3 usages of the nullish coalescing operator:
+
+1. A null value has been yielded: If the LHS of `??` yields a null value, it jumps to the RHS.
+2. Failure to access a nullable member: When evaluating the LHS, if a failure to access a member of a nullable member occures, it jumps to the RHS
+3. Partial Struct Access: When accessing a partial struct, and the value is not present, it jumps to the RHS.
+
+```tc
+type Object = {
+    name: String,
+    data: partial<{
+        x: f32, y: f32
+    }>?
+}
+
+let z: Object = {name: "John", data: null}
+let x = z.data?.x ?? 0.0f // Will be equal to 0.0f because z.data is null
+
+z.data = {x: 1.0f}
+let y = z.data?.x ?? 0.0f // Will be equal to 0.0f because z.data.x doesn't exist
+```
+
 
 ### `This` Expression:
 The `this` expression is used to access the current object's fields and methods. Hence it is only valid within a class.
