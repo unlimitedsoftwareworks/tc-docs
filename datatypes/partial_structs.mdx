@@ -11,8 +11,9 @@ Partial structs are structs that can be partially initialized. Partial structs a
 a struct with only a few fields, and set of default values for the rest.
 
 Partial structs have great limitations compared to regular structs, when dealing with them.
-The compiler doesn't assume the presence of any field in a partial struct, therefore a nullish coaslescing operator `??`
+1. The compiler doesn't assume the presence of any field in a partial struct, therefore a nullish coaslescing operator `??`
 is required to access their fields.
+2. Partial Structs are read only, and cannot be modified. You will have to transform them into concrete structures to modify them. (see merge operator below)
 
 ```tc
 type Point = {x: f64, y: f64}
@@ -37,6 +38,8 @@ let p2: Point = p >> {y: 2.0}
 let p3: Point = {x: 10.0} << p // p3: {x: 10.0}
 let p4 = {x: "hello"} << p // Error! Type mismatch
 let p5 = {y: 1} << {z: 1} // Error! both sides have no common fields
+p << p2 // Error, cannot modify partial struct
+p << p2 // OK
 ```
 
 ## Why spread operator doesn't work
@@ -93,7 +96,7 @@ p.x = p.x ?? 10 + 20 // OK
 
 
 ## Nullable Partial Struct
-Partial is not empty. A partial struct when initialized, must have at least one field set, otherwise, use nullable instead.
+Partial is not empty. A partial struct, when initialized, must have at least one field set, otherwise, use nullable instead.
 
 ```tc
 let data: { name: String, coords: partial<{x: f32, y: f32}>? } = {"hello, world!", null}
