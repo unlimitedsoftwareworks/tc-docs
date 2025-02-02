@@ -1,12 +1,26 @@
 # Immutability in Type-C
-Type-C enforces mutability through slightly unconventional ways.
+Type-C enforces mutability through `const` keyword, right after `let`. Immutability in Type-C behaves in a slightly unconventional way, as in it does not
+allow modifying the value of the constant. Meaning if you define a constant array for example, you cannot directly mutate its fields, within that context.
 
 ## Immutability
-Type-C doesn't enforce value immutability, but rather reference immutability.
+Type-C enforces value immutability rather than reference immutability.
+
+Consider the following typescript code:
+
+```ts
+const x = {a:1, b: 2}
+x.a = 11 // Ok
+let y = x // Ok
+
+const b = 1
+c = b // Ok
+```
+TypeScript enforce immutability on the reference, meaning you cannot reassign `x` to a new value, but you can still modify the value of `x`.
+Type-C enforce immutability on the value, meaning you cannot modify the value of `x`.
 
 ```tc
 let const x = 4
-let z = x // Ok
+let z = x // Ok, changing z doesn't affect x
 z = 5 // Ok
 ```
 
@@ -18,7 +32,6 @@ However, if `x` is an object, then it's a different story.
 let const x = {y: 4}
 let z = x // Error
 ```
-
 Since `x` is declared as `const`, it cannot be assigned to a non-const variable.
 
 Immutability is inherited. Meaning, if a variable is declared as `const`, all its properties are also `const`.
@@ -30,7 +43,7 @@ let z2 = vec.y // Error
 ```
 
 So now we have established that:
-1. Immutability protects the reference (and sub references), not the value.
+1. Immutability protects the value, not the reference.
 2. Immutability is inherited.
 3. Immutability must be maintained when assigning to a new variable.
 

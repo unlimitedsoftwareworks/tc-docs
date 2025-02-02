@@ -30,8 +30,8 @@ Type casting is not an instantaneous operation. In order to maintain type safety
 For example:
 
 ```tc
-let x: f32 = 1f;
-let z: u8 = x as u8;
+let x: f32 = 1f
+let z: u8 = x as u8
 ```
 
 In the above example, `x` is a floating point number, and `z` is an unsigned integer. The compiler will first convert `x` into `u32`, then to `u8`.
@@ -57,8 +57,8 @@ In the above example, `x` is a floating point number, and `z` is an unsigned int
 ### Example of Explicit Casting
 
 ```tc
-let a: i32 = 500;
-let b: i8 = a as i8;  // Explicit casting required due to potential data loss
+let a: i32 = 500
+let b: i8 = a as i8  // Explicit casting required due to potential data loss
 ```
 
 In this example, the value of `a` is explicitly cast to an `i8` type. Since `i8` has a smaller range, there is a risk of overflow, and explicit casting makes the developer aware of this possibility.

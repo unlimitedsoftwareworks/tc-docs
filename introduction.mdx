@@ -22,3 +22,22 @@ It is inspired by languages such as Javascript, Typescript, C.
 
 While Type-C shared few similarities with C, but it is not a superset of C. It is a new language with its own syntax and semantics.
 Some C concepts still applied, such as arguments and upvalues being passed by values and not reference.
+
+## State of the Project
+
+In this context, the project includes the compiler, virtual machine, standard library and the documentation.
+The entire project is still being developed.
+
+The compiler is written in TypeScript and compiles to a custom bytecode. `Type-V` is the virtual machine that executes the bytecode.
+
+As of the time of writing, the language core syntax is complete, some new features are being planned and evaluated.
+The compiler is being tested with various test cases, but not all edge cases are covered yet.
+The VM, while it runs, still incomplete, some work still need to be done reguarding the garbage collector and the FFI.
+Finally, the standard library is being developed, but not all features are available yet.
+
+However, this only covers the first version of the project.
+
+Type-C is ambitious, and a rewriting of the bytecode is being considered. This will only affect the backend side of
+the compiler and the VM.
+
+The frontend and the standard library are not affected by this, and will remain the same.

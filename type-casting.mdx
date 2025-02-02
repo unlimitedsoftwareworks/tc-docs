@@ -48,7 +48,13 @@ In summary, regular casting inherits the compiler's basic type safety but with a
 
 
 ## Forced Type Casting
-Forced casting, done using the `as!` operator, bypasses compiler checks. This type of casting is powerful but should be used with caution, as it can lead to undefined behavior if used improperly. It is most appropriate in situations where the developer has complete certainty about the underlying type and structure of the data, often following an explicit type check.
+Forced casting, done using the `as!` operator, bypasses compiler checks.
+This type of casting is powerful but should be used with caution, as it can lead to undefined behavior if used improperly.
+It is most appropriate in situations where the developer has complete certainty about the underlying type and structure of the data,
+often following an explicit type check.
+
+It is important to note that forced casting does not change the view of its parameter. It merely **overrides the compiler's type checking**.
+So force casting `i32` to `i64` would result in corruption of the data (no actual casting will be done).
 
 ```
 let obj: Object = getObject()
