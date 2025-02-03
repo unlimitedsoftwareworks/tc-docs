@@ -1,0 +1,52 @@
+Type-C offers a lot of features, but it's important to use them wisely. Here are some best practices to keep in mind:
+
+## Class or Struct?
+The choice between a class and struct is rather straight forward.
+If you need to model hidden state, use a class. If the fields are independent of each other, use a struct.
+
+For example:
+```tc
+type Point = struct {
+    x: u32
+    y: u32
+}
+```
+
+The fields of the struct are independent of each other, so it makes sense to use a struct.
+
+```tc
+type Str = struct {
+    data: u8[],
+    len: u32
+}
+```
+
+The `len` field is dependent on the `data` field, so it makes sense to use a class, and encapsulate the logic to update the `len` field for example
+
+## Classes vs Interfaces
+Type-C encourages interface usage, a lot. It is recommended to program around interfaces for a vareity of reasons, but most importantly, flexibility.
+Hence, it is recommended to use factory pattern for classes rather than `new` keyword, and return an interface instead.
+
+Example:
+```tc
+type Object3D = interface {
+    fn render() -> void
+}
+
+type Cube = class {
+    static fn create() -> Object3D {
+        return new Cube()
+    }
+
+    fn init() -> void {
+        this.size = [1, 1, 1]
+    }
+
+    fn render() -> void {
+        // render cube
+    }
+}
+```
+
+This pattern is heavily used in the standard library, and is recommended.
+It is not recommended to make constructors private without reason.
