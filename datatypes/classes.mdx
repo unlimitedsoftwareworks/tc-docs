@@ -1,6 +1,8 @@
-# Classes
+Classes is Type-C serve to define objects with hidden state and behavior. Classes are the building blocks of object-oriented programming,
+and they allow for the creation of complex data structures and systems. Classes in Type-C are defined using the `class` keyword,
+followed by the class name and a block of code that contains the class attributes and methods.
 
-Classes in Type-C serve as the cornerstone for object-oriented programming (OOP), providing a structured approach to code organization. In contrast to traditional OOP languages, which often focus on both data and behavior, Type-C adopts a behavior-centric design philosophy.
+## Basic Example:
 
 ```tc
 type Person = class {
@@ -18,36 +20,38 @@ type Person = class {
 }
 ```
 
-Type-C has no keywords for encapsulation, instead opting for a naming convention similar to Python's and same we are all adults here - philosophy. Attributes or methods prefixed with an underscore are considered "private" and should not be accessed directly. This is a matter of convention, and it is up to developers to respect this scoping. Additionally, the recommended approach for encapsulating data is the use of interfaces. If you properly describe your class with interface, you can be sure that the class will be used as intended.
+## Encapsluation
+Type-C supports encapsulation through the `local` keyword, indicating that an attribute or method is only accessible within the class.
 
 ```tc
 type Person = class {
-    let const _name: string
-    let _age: u32
+    let local const name: string
+    let local age: u32
 
     fn init(name: string, age: u32) {
-        this._name = name
-        this._age = age
+        this.name = name
+        this.age = age
     }
 
     fn sayHello() {
-        println("Hello, my name is {} and I am {} years old.", this._name, this._age)
+        println("Hello, my name is {} and I am {} years old.", this.name, this.age)
     }
 
     fn setAge(age: u32) {
         if age < 120 {
-            this._age = age
-        }
-    }
-
-    fn setName(name: string) {
-        if (name.length > 0) && (name.length < 20) {
-            this._name = name
+            this.age = age
         }
     }
 }
 ```
+## Constant State
+When class attributes are declared as `const`, they can only be modified within a constructor (i,e `init` method).
+If an attribute is modified outside the constructor, the compiler will raise an error.
 
+In other words, the `init` function will ignore all `const` checks for write access on the attributes of the class
+being initialized.
+
+## Implementing Interfaces
 Classes in Type-C can implement interfaces, increasing their functionality and making them more versatile.
 
 ```tc
@@ -78,24 +82,78 @@ type Person = class Serializable, Deserializable<Person> {
 }
 ```
 
-When defining classes, it is import to declare attributes prior to methods. Once a method declaration has been found, the compiler will expect only methods afterwards. This is design choice is made to standardize the way classes are defined.
-
 ## Classes and Method Overloading
-Method overloading is allowed within classes and interfaces. A method signature is what identifies a method, and it is composed of the method name and the types of its parameters. Hence, two methods with the same name but different parameter types are considered overloaded. Return type within the signature is not considered, hence if two methods have the same name and parameter types but different return types, they are considered duplicates and will cause a compilation error.
+Method overloading is allowed within classes and interfaces. A method signature is what identifies a method, and it is composed of the method name
+and the types of its parameters. Hence, two methods with the same name but different parameter types are considered overloaded.
+Return type within the signature is not considered, hence if two methods have the same name and parameter types but different return types,
+they are considered duplicates and will cause a compilation error.
 
 ```tc
 type Array<T> = class {
-    let _data: T[]
+    let data: T[]
 
     fn init(data: T[]) {
-        this._data = data
+        this.data = data
     }
 
     fn init() {
-        this._data = []
+        this.data = []
     }
+
+    // overload the index [] operator
+    fn [](idx: u64) = this.data[idx]
 }
 ```
+You can overload an operator by using its symbol or name (surrounded with two underscores) such as `+` or `__add__`
+It is possible to overload the following operators:
+```ts
+{
+    "+": "__add__",
+    "-": "__sub__",
+    "*": "__mul__",
+    "/": "__div__",
+    "%": "__mod__",
+    "<": "__lt__",
+    ">": "__gt__",
+    "<=": "__le__",
+    ">=": "__ge__",
+    ">>": "__rshift__",
+    "<<": "__lshift__",
+    "&": "__band__",
+    "|": "__bor__",
+    "^": "__xor__",
+    "&&": "__and__",
+    "||": "__or__",
+    "!": "__not__",
+    "~": "__bnot__",
+    "[]": "__index__",
+    "[-]": "__reverse_index__",
+    "[]=": "__index_set__",
+    "[-]=": "__reverse_index_set__",
+    "()": "__call__",
+    "++": "__inc__",
+    "--": "__dec__"
+}
+```
+
+## Declaring same Method with Multiple Names
+Consider the case where an interface has the following signature:
+```tc
+type Indexable<T> = interface {
+    fn get(idx: u64) -> T
+}
+```
+
+You now want to have a class that implements this interface, but you want to also use `[]` to achieve same behavior as `get`.
+
+```tc
+type IndexableClass<T> = class Indexable<T> {
+    fn get | [] (idx: u64) -> T {..}
+}
+```
+
+separator `|` is used to separate the different names of the method.
+
 
 ## Classes and Inheritance
 It is better to think of classes as concrete behaviors rather than a hierarchy of types.
@@ -120,7 +178,7 @@ Suppose we have the following data types:
 
 ```tc
 type X<T> = class {
-    fn get<T>(x: T) -> T {
+    fn get(x: T) -> T {
         return x
     }
 }
@@ -132,7 +190,7 @@ This is completely valid, as long as the interface header is compatible with the
 
 ```tc
 type X = class {
-    fn get<T: {name: String}>(x: T) -> T {
+    fn get<T: Indexable>(x: T) -> T {
         return x
     }
 }
@@ -142,7 +200,7 @@ let z: interface {fn get(x: u32) -> u32} = new X() // Woupsy
 
 Will fail since the given type argument does not satisfy the constraints of the generic class.
 
-Also generics that have multiple constraints, will need to have only one when made concrete, otherwise compiler will fail, here is an example:
+Also generics that have multiple constraints, will need to have only one when made concrete, otherwise compiler will fail, here is another example:
 
 ```tc
 fn dostuff<T: Circle | Cube>(x: T, y: T)

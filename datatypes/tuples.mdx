@@ -1,6 +1,3 @@
-
-# Tuples
-
 Tuples data types are not directly used by the user, they are used as a mechanism to allow functions to return multiple values.
 
 Tuples are expected only when when parsing function return types, and are not used in any other context.
@@ -56,7 +53,7 @@ fn doStuff(x: u32) -> (u32, u32) {
 fn doStuff(x: u32) -> (u32, u32) = (x+1, x+2)
 ```
 
-It is important to notice that the comma is used primarly as a separator within Type-C, meaning that stacking expression with a comma will generally result in a compile-time error. The only expection to this 
+It is important to notice that the comma is used primarly as a separator within Type-C, meaning that stacking expression with a comma will generally result in a compile-time error. The only expection to this
 is when returning a tuple from a function, meaning right after the function assignment or the return statement.
 
 

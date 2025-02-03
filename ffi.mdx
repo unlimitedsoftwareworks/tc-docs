@@ -1,5 +1,3 @@
-# Foreign Function Interface
-
 Type-C provides a Lua-inspired API to interface with the virtual machine. However, since Type-C requires types to interface properly with FFIs, a type annotation is needed by the compiler. In this section we review with some examples, how to define the ffi in the language level and VM level. This requires knowledge of the C programming language. Also the VM API will be presented and used heavily, but it also subject to change as the VM progresses, but the philosophy and approach will always be the same.
 ## Type-V FFI API
 Type-V VM `api/typev_api.h` provides the require functions to interface with the VM. These functions you will be using in your main FFI code, to interface with the VM to get argument, build data structure and return values.

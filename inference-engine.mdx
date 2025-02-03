@@ -1,13 +1,10 @@
-Inference Engine
-===
-
 The Inference Engine is part of the compiler that can infer data type of some values without explicitely specifying it.
 While Type-C is strongly typed, it can be tedious to specify the type of every value, especially when the type is obvious.
 
 Since Inference engine is major component of the compiler, it is crutial to understand its behavior and limitations.
 
 
-## Inference Engine Basics 
+## Inference Engine Basics
 Before we dive any deeper, we need to introduce some terms and concepts.
 
 - `Inferred Type`: A type assigned to an expression during inference.
@@ -78,6 +75,5 @@ type String = class {
 let s = new String()
 s.cat(3)
 ```
-In order for the compiler to detect which method to call, in the call `s.cat(3)`, it will infer the type of `3` as `u32` and then attempt to find a method that matches the signature `fn cat(s: u32) -> String`. 
+In order for the compiler to detect which method to call, in the call `s.cat(3)`, it will infer the type of `3` as `u32` and then attempt to find a method that matches the signature `fn cat(s: u32) -> String`.
 Meaning, it cannot use the function argument as hint when inferring arguments, since there can be multiple. Hence it will infer the arguments of the function without any *hint*, so using any unnamed structure will result in an error.
-
