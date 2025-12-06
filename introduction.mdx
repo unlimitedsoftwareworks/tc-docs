@@ -6,35 +6,22 @@ Type-C is a work in progress programming language, with the following goals in m
 Type-C is a modern take of C programming language but for general purpose programming.
 It is inspired by languages such as Javascript, Typescript, C.
 
-
 <div role="alert" className="alert striped1">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
     <span>
         <b>Note from the author:</b>
-        Type-C doesn't aim to replace any other language. I do not claim that Type-C to be better, faster or safer than any other language.
-        With Type-C, I am implementing my own ideas and concepts, and I am sharing them with the world.
-        If you think Type-C is cool, then I am happy to hear that. If you think Type-C I would appreciate **constructive feedback**.
+        Type-C scope might change. The language is not yet stable and the documentation is incomplete. Meaning 
+        syntax, features and concepts might change without prior notice.
+        Please use it at your own risk! Otherwise, feel free to contribute or provide feedback!
     </span>
 </div>
 
-While Type-C shared few similarities with C, but it is not a superset of C. It is a new language with its own syntax and semantics.
-Some C concepts still applied, such as arguments and upvalues being passed by values and not reference.
+The purpose for Type-C is to be a general purpose programming language, for building servers, CLIs, video games, etc.
 
-## State of the Project
+Type-C opted for an intreptered model, heavily inspired by LuaJIT.
 
-In this context, the project includes the compiler, virtual machine, standard library and the documentation.
-The entire project is still being developed.
+Type-C attempts to extract the elegant parts of TypeScript, outside of the JavaScript ecosystem, and into a new language, that does not have
+the same design as JavaScript. Changing the design results in more flexibility or constraint on the language, and Type-C is playing with those ideas.
 
-The compiler is written in TypeScript and compiles to a custom bytecode. `Type-V` is the virtual machine that executes the bytecode.
-
-As of the time of writing, the language core syntax is complete, some new features are being planned and evaluated.
-The compiler is being tested with various test cases, but not all edge cases are covered yet.
-The VM, while it runs, still incomplete, some work still need to be done reguarding the garbage collector and the FFI.
-Finally, the standard library is being developed, but not all features are available yet.
-
-However, this only covers the first version of the project.
-
-Type-C is ambitious, and a rewriting of the bytecode is being considered. This will only affect the backend side of
-the compiler and the VM.
-
-The frontend and the standard library are not affected by this, and will remain the same.
+To put it simply, Type-C attempts to maximize performance and safety, while providing a productive and expressive programming experience.
+The language's features are defined by these goals. This will become clear as we learn more about the language and more importantly its limitations.
